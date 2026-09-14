@@ -286,17 +286,17 @@ export function DashboardShell({ children }: DashboardShellProps) {
         <SidebarProvider className="flex-1 overflow-hidden">
           <DashboardSidebar />
           <SidebarInset className="flex flex-col overflow-hidden bg-background h-svh">
-            <header className="flex-none flex h-14 items-center justify-between gap-3 border-b border-border bg-background px-4 md:px-5">
+            <header className="flex-none flex h-14 items-center justify-between gap-3 border-b border-sidebar-border bg-sidebar px-4 text-sidebar-foreground md:px-5">
               <div className="flex items-center gap-3">
                 <SidebarTrigger
-                  className="-ml-1 size-8 rounded-lg"
+                  className="-ml-1 size-8 rounded-lg text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                   aria-label="Toggle sidebar"
                 />
 
-                <div className="h-4 w-px bg-border hidden sm:block" aria-hidden="true" />
+                <div className="h-4 w-px bg-sidebar-border hidden sm:block" aria-hidden="true" />
 
                 <div className="min-w-0">
-                  <h2 className="truncate font-display text-sm font-semibold tracking-tight text-foreground">
+                  <h2 className="truncate font-display text-sm font-semibold tracking-tight text-sidebar-foreground">
                     Management
                   </h2>
                 </div>
@@ -307,7 +307,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
 
                 <NfcCardDialog
                   trigger={
-                    <Button>
+                    <Button className="text-sidebar-foreground">
                       <Plus className="size-3.5" aria-hidden="true" />
                       New card
                     </Button>

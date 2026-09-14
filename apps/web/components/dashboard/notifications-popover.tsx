@@ -51,9 +51,9 @@ export function NotificationsPopover() {
         <Button
           variant="ghost"
           size="icon"
-          className="relative size-8 rounded-md hover:bg-muted"
+          className="relative size-8 rounded-md text-sidebar-foreground/80 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
         >
-          <Bell className="size-4 text-muted-foreground" />
+          <Bell className="size-4" />
           {unreadCount > 0 && (
             <span className="absolute right-1 top-1 flex size-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
