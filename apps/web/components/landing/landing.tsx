@@ -178,29 +178,29 @@ function TiltCard() {
               ? undefined
               : { rotateX, rotateY, transformStyle: "preserve-3d" }
           }
-          className="relative aspect-[1.586/1] w-full overflow-hidden rounded-2xl border border-cream/10 bg-gradient-to-br from-forest to-forest-ink p-7 shadow-[0_50px_110px_-35px_rgba(0,0,0,0.8)]"
+          className="relative aspect-[1.586/1] w-full overflow-hidden rounded-2xl border border-cream/10 bg-gradient-to-br from-forest to-forest-ink p-5 shadow-[0_50px_110px_-35px_rgba(0,0,0,0.8)] sm:p-7"
         >
           <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-brass/15 blur-3xl" />
 
-        <div className="relative flex items-start justify-between">
-          <Logo variant="ink" markClassName="w-7" wordClassName="text-[15px]" />
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-brass/40 bg-brass/10 px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.14em] text-brass">
+        <div className="relative flex items-start justify-between gap-2">
+          <Logo variant="ink" markClassName="w-6 sm:w-7" wordClassName="text-[13px] sm:text-[15px]" />
+          <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-brass/40 bg-brass/10 px-2 py-0.5 text-[8px] font-semibold uppercase tracking-[0.12em] text-brass sm:gap-1.5 sm:px-2.5 sm:py-1 sm:text-[9px] sm:tracking-[0.14em]">
             <span className="h-1.5 w-1.5 rounded-full bg-brass" />
             Verified
           </span>
         </div>
 
-        <div className="relative mt-9">
+        <div className="relative mt-6 sm:mt-9">
           <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-cream/40">
             Tap to introduce
           </p>
-          <p className="mt-2 font-display text-[26px] font-semibold tracking-tight text-cream">
+          <p className="mt-2 font-display text-[22px] font-semibold tracking-tight text-cream sm:text-[26px]">
             Handshakes
           </p>
-          <p className="text-[13px] text-cream/55">Your digital business card</p>
+          <p className="text-[12px] text-cream/55 sm:text-[13px]">Your digital business card</p>
         </div>
 
-        <div className="relative mt-7 flex items-end justify-between">
+        <div className="relative mt-5 flex items-end justify-between sm:mt-7">
           <span className="relative inline-flex h-7 w-9 items-center justify-center rounded-[5px] bg-gradient-to-br from-[#E6C583] to-brass">
             <span className="block h-3.5 w-5 rounded-[2px] border border-brass-foreground/30" />
           </span>
