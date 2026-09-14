@@ -86,13 +86,13 @@ function Hero() {
         >
           <Link
             href="/signup"
-            className="inline-flex h-12 items-center justify-center rounded-full bg-brass px-7 text-sm font-semibold text-brass-foreground transition hover:brightness-[1.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass focus-visible:ring-offset-2 focus-visible:ring-offset-forest-ink"
+            className="inline-flex h-12 items-center justify-center rounded-lg bg-brass px-7 text-sm font-semibold text-brass-foreground transition hover:brightness-[1.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass focus-visible:ring-offset-2 focus-visible:ring-offset-forest-ink"
           >
             Create your card
           </Link>
           <Link
             href="#ritual"
-            className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-cream/25 px-7 text-sm font-medium text-cream transition hover:border-cream/50 hover:bg-cream/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cream/40"
+            className="inline-flex h-12 items-center justify-center gap-2 rounded-lg border border-cream/25 px-7 text-sm font-medium text-cream transition hover:border-cream/50 hover:bg-cream/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cream/40"
           >
             The ritual
           </Link>
@@ -143,12 +143,12 @@ function TiltCard() {
 
   return (
     <div
-      className="relative w-full max-w-[430px] [perspective:1200px]"
+      className="relative mx-auto w-[74vw] max-w-[420px] [perspective:1200px] sm:w-full sm:max-w-[430px]"
       onPointerMove={track}
       onPointerLeave={reset}
     >
       {/* Back face — the fallback card, peeking */}
-      <div className="absolute -left-5 top-8 aspect-[1.586/1] w-[82%] -rotate-[7deg] rounded-2xl border border-black/5 bg-cream px-6 py-5 text-forest-ink shadow-[0_30px_70px_-30px_rgba(0,0,0,0.65)]">
+      <div className="absolute -left-3 top-6 aspect-[1.586/1] w-[82%] -rotate-[6deg] rounded-2xl border border-black/5 bg-cream px-6 py-5 text-forest-ink shadow-[0_30px_70px_-30px_rgba(0,0,0,0.65)] sm:-left-5 sm:top-8 sm:-rotate-[7deg]">
         <div className="flex h-full flex-col justify-between">
           <div className="flex items-center justify-between">
             <WingMark variant="folio" className="w-7" />

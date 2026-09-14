@@ -301,49 +301,55 @@ export function CardsClient({ initialData }: CardsClientProps) {
       {selectedCardId && selectedCard && (() => {
         const content = (
           <>
-            <div className="p-5 border-b flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-background sticky top-0 z-20">
-              <div className="flex items-start sm:items-center gap-4">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setSelectedCardId(null)}
-                  className="rounded-lg hover:bg-muted shrink-0"
-                >
-                  <MoveLeftIcon size={20} />
-                </Button>
-                <div className="space-y-0.5 min-w-0">
-                  <h3 className="font-black text-lg tracking-tight uppercase truncate">Card Details</h3>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-[10px] text-muted-foreground font-mono bg-muted px-1.5 py-0.5 rounded-lg border border-border truncate max-w-[120px] sm:max-w-none">{selectedCard.id}</span>
-                    <Badge variant="outline" className="text-[9px] h-5 px-1.5 font-bold uppercase tracking-tighter rounded-lg border-border shrink-0">
-                      {formatCardType(selectedCard.cardType)}
-                    </Badge>
-                    <CardStatusBadge status={selectedCard.status} />
-                  </div>
+            <div className="p-5 border-b flex items-start gap-3 bg-background sticky top-0 z-20">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setSelectedCardId(null)}
+                aria-label="Back to cards"
+                className="rounded-lg hover:bg-muted shrink-0"
+              >
+                <MoveLeftIcon size={20} />
+              </Button>
+
+              <div className="flex flex-1 min-w-0 flex-col gap-4">
+                <div className="flex items-center justify-between gap-3">
+                  <h3 className="min-w-0 truncate font-black text-lg tracking-tight uppercase">Card Details</h3>
+                  <CardStatusBadge status={selectedCard.status} />
                 </div>
-              </div>
-              <div className="flex gap-2.5 w-full sm:w-auto shrink-0 pl-14 sm:pl-0">
-                <NfcCardDialog
-                  initialData={selectedCard}
-                  open={isEditDialogOpen}
-                  onOpenChange={setIsEditDialogOpen}
-                  trigger={
-                    <Button variant="outline" size="sm" onClick={() => setIsEditDialogOpen(true)}>
-                      Edit Card
-                    </Button>
-                  }
-                  onSuccess={refetch}
-                />
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button
-                      variant={selectedCard.status === "ACTIVE" ? "destructive" : "default"}
-                      size="sm"
-                      disabled={selectedCard.status === "UNASSIGNED" || updateMutation.isPending}
-                    >
-                      {updateMutation.isPending ? "Updating..." : (selectedCard.status === "ACTIVE" ? "Deactivate" : "Activate")}
-                    </Button>
-                  </AlertDialogTrigger>
+
+                <div className="flex flex-wrap items-center gap-2">
+                  <Badge variant="outline" className="h-5 shrink-0 rounded-lg border-border px-1.5 text-[9px] font-bold uppercase tracking-tighter">
+                    {formatCardType(selectedCard.cardType)}
+                  </Badge>
+                  <span className="max-w-[200px] truncate rounded-lg border border-border bg-muted px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
+                    {selectedCard.id}
+                  </span>
+                </div>
+
+                <div className="flex gap-2.5">
+                  <NfcCardDialog
+                    initialData={selectedCard}
+                    open={isEditDialogOpen}
+                    onOpenChange={setIsEditDialogOpen}
+                    trigger={
+                      <Button variant="outline" size="sm" onClick={() => setIsEditDialogOpen(true)} className="flex-1 sm:flex-none">
+                        Edit Card
+                      </Button>
+                    }
+                    onSuccess={refetch}
+                  />
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        variant={selectedCard.status === "ACTIVE" ? "destructive" : "default"}
+                        size="sm"
+                        disabled={selectedCard.status === "UNASSIGNED" || updateMutation.isPending}
+                        className="flex-1 sm:flex-none"
+                      >
+                        {updateMutation.isPending ? "Updating..." : (selectedCard.status === "ACTIVE" ? "Deactivate" : "Activate")}
+                      </Button>
+                    </AlertDialogTrigger>
                   <AlertDialogContent className="rounded-lg">
                     <AlertDialogHeader>
                       <AlertDialogTitle className="font-bold text-lg">
@@ -373,12 +379,13 @@ export function CardsClient({ initialData }: CardsClientProps) {
                       </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
-                </AlertDialog>
+                  </AlertDialog>
+                </div>
               </div>
             </div>
 
             <ScrollArea className="flex-1 w-full min-h-0">
-              <div className="p-4 sm:p-8 pb-16">
+              <div className="p-5 sm:p-8 pb-16">
                 <div className="max-w-3xl mx-auto">
                   <div className="flex flex-col gap-6">
                     <div className="flex items-center gap-3 px-2">
@@ -424,7 +431,7 @@ export function CardsClient({ initialData }: CardsClientProps) {
         if (isMobile) {
           return (
             <Sheet open={true} onOpenChange={(open) => !open && setSelectedCardId(null)}>
-              <SheetContent className="w-[95vw] p-0 flex flex-col h-full sm:max-w-md [&>button]:hidden border-l" side="right">
+              <SheetContent className="data-[side=right]:w-screen data-[side=right]:max-w-none data-[side=right]:sm:max-w-none p-0 flex flex-col h-full [&>button]:hidden" side="right">
                 <SheetTitle className="sr-only">Card Details</SheetTitle>
                 <SheetDescription className="sr-only">NFC Card Details and Profile Configuration</SheetDescription>
                 <div className="flex-1 bg-muted/5 flex flex-col h-full overflow-hidden relative">

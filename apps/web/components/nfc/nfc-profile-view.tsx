@@ -60,8 +60,8 @@ export function NfcProfileView({
   onEdit,
 }: NfcProfileViewProps) {
   return (
-    <div className="max-w-xl mx-auto sm:px-4 py-6">
-      <div className="sm:p-6 space-y-4">
+    <div className="max-w-xl mx-auto p-5 sm:px-4 sm:py-6">
+      <div className="sm:p-6 space-y-5">
         {/* Header */}
         <div className="flex items-start justify-between">
           <div>

@@ -50,9 +50,9 @@ export function OverviewChart({ data }: OverviewChartProps) {
   }));
 
   return (
-    <Card className="rounded-xl overflow-hidden border-border bg-card/50 backdrop-blur-sm">
+    <Card className="rounded-2xl overflow-hidden">
       <CardHeader>
-        <CardTitle className="text-base font-bold">Engagement Activity</CardTitle>
+        <CardTitle className="text-base font-semibold">Engagement Activity</CardTitle>
         <CardDescription>Daily views and contact saves (Last 30 days)</CardDescription>
       </CardHeader>
       <CardContent>

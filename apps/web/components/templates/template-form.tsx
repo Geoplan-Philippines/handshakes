@@ -88,12 +88,12 @@ export function TemplateForm({ initialData, onSuccess, onCancel }: TemplateFormP
       {/* Editor Side */}
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList variant="line" className="w-full justify-start rounded-lg border-b border-border bg-transparent p-0 h-11 gap-6 overflow-x-auto no-scrollbar">
+          <TabsList variant="line" className="w-full justify-start border-b border-border bg-transparent p-0 h-11 gap-6 overflow-x-auto no-scrollbar">
             {["basics", "branding", "layers", "aesthetics"].map((tab) => (
               <TabsTrigger
                 key={tab}
                 value={tab}
-                className="shrink-0 rounded-lg px-0 font-semibold text-sm h-full capitalize border-transparent data-active:border-foreground"
+                className="shrink-0 -mb-px rounded-none border-transparent border-b-2 px-0 font-semibold text-sm h-full capitalize after:hidden data-active:border-b-foreground"
               >
                 {tab}
               </TabsTrigger>

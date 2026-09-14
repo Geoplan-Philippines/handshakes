@@ -60,13 +60,13 @@ export function Header() {
         <div className="flex items-center gap-1.5 sm:gap-3">
           <Link
             href="/login"
-            className="hidden rounded-full px-4 py-2 text-sm font-medium text-cream/75 transition-colors hover:text-cream focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cream/40 sm:inline-flex"
+            className="hidden rounded-lg px-4 py-2 text-sm font-medium text-cream/75 transition-colors hover:text-cream focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cream/40 sm:inline-flex"
           >
             Sign in
           </Link>
           <Link
             href="/signup"
-            className="inline-flex items-center rounded-full bg-brass px-4 py-2 text-sm font-semibold text-brass-foreground transition hover:brightness-[1.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass focus-visible:ring-offset-2 focus-visible:ring-offset-forest-ink"
+            className="inline-flex items-center rounded-lg bg-brass px-4 py-2 text-sm font-semibold text-brass-foreground transition hover:brightness-[1.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass focus-visible:ring-offset-2 focus-visible:ring-offset-forest-ink"
           >
             Create card
           </Link>

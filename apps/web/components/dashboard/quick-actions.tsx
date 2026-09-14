@@ -11,7 +11,7 @@ const actionButtonClasses =
 
 export function QuickActions() {
   return (
-    <Card className="rounded-xl overflow-hidden h-full">
+    <Card className="rounded-2xl overflow-hidden h-full">
       <CardHeader>
         <CardTitle className="text-base font-bold uppercase tracking-wider">Quick Actions</CardTitle>
       </CardHeader>

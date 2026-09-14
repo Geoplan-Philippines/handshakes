@@ -59,20 +59,19 @@ export function TemplatesClient({ initialData }: TemplatesClientProps) {
         "transition-all duration-300 flex flex-col gap-4",
         selectedTemplateId && !isMobile ? "w-80" : "w-full"
       )}>
-        <div className="flex items-center justify-between px-2">
+        <div className="px-2">
           <PageHeader
             title="Templates"
             description="Manage Organization Layouts"
+            action={
+              <Button asChild className="rounded-lg">
+                <Link href={`/dashboard/${slug}/templates/new`}>
+                  <Plus className="size-3.5" />
+                  New Template
+                </Link>
+              </Button>
+            }
           />
-          <Button
-            asChild
-            className="rounded-lg"
-          >
-            <Link href={`/dashboard/${slug}/templates/new`}>
-              <Plus className="size-3.5" />
-              New Template
-            </Link>
-          </Button>
         </div>
 
         <ScrollArea className="flex-1 pr-4 min-h-0">
@@ -303,7 +302,7 @@ export function TemplatesClient({ initialData }: TemplatesClientProps) {
         if (isMobile) {
           return (
             <Sheet open={true} onOpenChange={(open) => !open && setSelectedTemplateId(null)}>
-              <SheetContent className="w-[95vw] p-0 flex flex-col h-full sm:max-w-md [&>button]:hidden border-l" side="right">
+              <SheetContent className="data-[side=right]:w-screen data-[side=right]:max-w-none data-[side=right]:sm:max-w-none p-0 flex flex-col h-full [&>button]:hidden" side="right">
                 <SheetTitle className="sr-only">Template Details</SheetTitle>
                 <SheetDescription className="sr-only">Visual overview and configuration details for this template.</SheetDescription>
                 <div className="flex-1 bg-muted/5 flex flex-col h-full overflow-hidden relative">
