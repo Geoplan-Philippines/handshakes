@@ -62,13 +62,13 @@ export function IdentityTab({ form }: IdentityTabProps) {
                   }} 
                   value={field.value ?? "default"}
                 >
-                  <SelectTrigger className="rounded-lg h-10 border-border">
+                  <SelectTrigger className="w-full rounded-lg h-9 text-xs shadow-sm border-border focus-visible:ring-1 focus-visible:ring-foreground/20">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="rounded-lg">
-                    <SelectItem value="default">Standard Light</SelectItem>
-                    <SelectItem value="modern-dark">Deep Onyx</SelectItem>
-                    <SelectItem value="glass">Frosted Glass</SelectItem>
+                  <SelectContent position="popper" align="start" className="min-w-[170px] rounded-lg p-1">
+                    <SelectItem value="default" className="text-xs">Standard Light</SelectItem>
+                    <SelectItem value="modern-dark" className="text-xs">Deep Onyx</SelectItem>
+                    <SelectItem value="glass" className="text-xs">Frosted Glass</SelectItem>
                   </SelectContent>
                 </Select>
                 {fieldState.invalid && <FieldError errors={[fieldState.error]} />}

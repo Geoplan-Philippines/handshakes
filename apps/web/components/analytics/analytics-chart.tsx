@@ -131,7 +131,7 @@ export function AnalyticsChart({ slug }: AnalyticsChartProps) {
                 <Button
                   variant="outline"
                   className={cn(
-                    "w-[260px] justify-start text-left text-xs font-bold uppercase tracking-wider rounded-lg border-foreground/10",
+                    "w-[260px] h-9 justify-start text-left text-xs font-bold uppercase tracking-wider rounded-lg bg-white shadow-sm border-border hover:bg-white focus-visible:ring-1 focus-visible:ring-foreground/20",
                     !filters.from && "text-muted-foreground"
                   )}
                 >
@@ -202,14 +202,14 @@ export function AnalyticsChart({ slug }: AnalyticsChartProps) {
               value={filters.channel || "ALL"}
               onValueChange={(val) => setFilters(prev => ({ ...prev, channel: val === "ALL" ? undefined : val as any }))}
             >
-              <SelectTrigger className="w-[140px] h-9 text-xs font-bold uppercase tracking-wider">
+              <SelectTrigger className="w-[140px] rounded-lg h-9 text-xs bg-white shadow-sm border-border focus-visible:ring-1 focus-visible:ring-foreground/20">
                 <SelectValue placeholder="All Channels" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ALL" className="text-xs font-bold uppercase">All Channels</SelectItem>
-                <SelectItem value="NFC_TAP" className="text-xs font-bold uppercase">NFC Taps</SelectItem>
-                <SelectItem value="QR_SCAN" className="text-xs font-bold uppercase">QR Scans</SelectItem>
-                <SelectItem value="DIRECT_LINK" className="text-xs font-bold uppercase">Direct Links</SelectItem>
+              <SelectContent position="popper" align="start" className="min-w-[170px] p-1">
+                <SelectItem value="ALL" className="text-xs">All Channels</SelectItem>
+                <SelectItem value="NFC_TAP" className="text-xs">NFC Taps</SelectItem>
+                <SelectItem value="QR_SCAN" className="text-xs">QR Scans</SelectItem>
+                <SelectItem value="DIRECT_LINK" className="text-xs">Direct Links</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -220,13 +220,13 @@ export function AnalyticsChart({ slug }: AnalyticsChartProps) {
               value={filters.profileId || "ALL"}
               onValueChange={(val) => setFilters(prev => ({ ...prev, profileId: val === "ALL" ? undefined : val }))}
             >
-              <SelectTrigger className="w-[180px] h-9 text-xs font-bold uppercase tracking-wider">
+              <SelectTrigger className="w-[180px] rounded-lg h-9 text-xs bg-white shadow-sm border-border focus-visible:ring-1 focus-visible:ring-foreground/20">
                 <SelectValue placeholder="All Profiles" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ALL" className="text-xs font-bold uppercase">All Profiles</SelectItem>
+              <SelectContent position="popper" align="start" className="min-w-[170px] p-1">
+                <SelectItem value="ALL" className="text-xs">All Profiles</SelectItem>
                 {profiles?.map((profile) => (
-                  <SelectItem key={profile.id} value={profile.id} className="text-xs font-bold uppercase">
+                  <SelectItem key={profile.id} value={profile.id} className="text-xs">
                     {profile.firstName} {profile.lastName}
                   </SelectItem>
                 ))}
