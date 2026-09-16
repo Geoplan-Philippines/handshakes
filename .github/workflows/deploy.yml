@@ -1,4 +1,4 @@
-name: "DEPLOY IDENTITREE"
+name: "DEPLOY HANDSHAKES"
 
 on:
   push:
@@ -16,16 +16,16 @@ jobs:
         run: |
           if [[ $GITHUB_REF == 'refs/heads/main' ]]; then
             echo "TAG=prod" >> $GITHUB_ENV
-            echo "API_URL=https://identitree-api.geoplanph.com/api/v1" >> $GITHUB_ENV
-            echo "DEPLOY_PATH=docker-apps/identitree/prod" >> $GITHUB_ENV
+            echo "API_URL=https://handshakes-api.geoplanph.com/api/v1" >> $GITHUB_ENV
+            echo "DEPLOY_PATH=docker-apps/handshakes/prod" >> $GITHUB_ENV
           elif [[ $GITHUB_REF == 'refs/heads/staging' ]]; then
             echo "TAG=stg" >> $GITHUB_ENV
-            echo "API_URL=https://identitree-stg-api.geoplanph.com/api/v1" >> $GITHUB_ENV
-            echo "DEPLOY_PATH=docker-apps/identitree/stg" >> $GITHUB_ENV
+            echo "API_URL=https://handshakes-stg-api.geoplanph.com/api/v1" >> $GITHUB_ENV
+            echo "DEPLOY_PATH=docker-apps/handshakes/stg" >> $GITHUB_ENV
           else
             echo "TAG=dev" >> $GITHUB_ENV
-            echo "API_URL=https://identitree-dev-api.geoplanph.com/api/v1" >> $GITHUB_ENV
-            echo "DEPLOY_PATH=docker-apps/identitree/dev" >> $GITHUB_ENV
+            echo "API_URL=https://handshakes-dev-api.geoplanph.com/api/v1" >> $GITHUB_ENV
+            echo "DEPLOY_PATH=docker-apps/handshakes/dev" >> $GITHUB_ENV
           fi
 
       - name: Docker login
@@ -36,18 +36,16 @@ jobs:
 
       - name: Build and Push API
         run: |
-          docker build -t geoplanoperation/identitree-api:${{ env.TAG }} -f apps/api/Dockerfile .
-          docker push geoplanoperation/identitree-api:${{ env.TAG }}
+          docker build -t geoplanoperation/handshakes-api:${{ env.TAG }} -f apps/api/Dockerfile .
+          docker push geoplanoperation/handshakes-api:${{ env.TAG }}
 
       - name: Build and Push Web
         run: |
           docker build \
             --build-arg NEXT_PUBLIC_API_BASE_URL=${{ env.API_URL }} \
-            --build-arg NEXT_PUBLIC_POSTHOG_KEY=${{ secrets.NEXT_PUBLIC_POSTHOG_KEY }} \
-            --build-arg NEXT_PUBLIC_POSTHOG_HOST=${{ secrets.NEXT_PUBLIC_POSTHOG_HOST }} \
-            -t geoplanoperation/identitree-web:${{ env.TAG }} \
+            -t geoplanoperation/handshakes-web:${{ env.TAG }} \
             -f apps/web/Dockerfile .
-          docker push geoplanoperation/identitree-web:${{ env.TAG }}
+          docker push geoplanoperation/handshakes-web:${{ env.TAG }}
 
       - name: Deploy to VPS
         uses: appleboy/ssh-action@v1.0.3
@@ -60,8 +58,8 @@ jobs:
             echo "[MESSAGE] Preparing images for ${{ env.TAG }}...."
 
             # These variables can be used inside your docker-compose.yml on the VPS
-            export API_IMAGE="geoplanoperation/identitree-api:${{ env.TAG }}"
-            export WEB_IMAGE="geoplanoperation/identitree-web:${{ env.TAG }}"
+            export API_IMAGE="geoplanoperation/handshakes-api:${{ env.TAG }}"
+            export WEB_IMAGE="geoplanoperation/handshakes-web:${{ env.TAG }}"
 
             echo "[MESSAGE] Pulling latest images..."
             docker compose pull
