@@ -18,6 +18,7 @@ export type Profile = {
   linkedinUsername?: string | null;
   whatsappNumber?: string | null;
   viberNumber?: string | null;
+  bookingUrl?: string | null;
   organizationId?: string | null;
   ownerUserId?: string | null;
   createdAt: string;
@@ -26,6 +27,7 @@ export type Profile = {
     name: string;
     logo?: string;
     website?: string;
+    brochureUrl?: string;
   } | null;
   templateId?: string | null;
   template?: Template | null;

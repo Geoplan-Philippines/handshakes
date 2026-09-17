@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 import { AuthFlowShell } from "@/components/auth/auth-flow-shell";
 import { SignupForm } from "@/components/auth/signup-form";
 import { redirectAuthenticatedUserAwayFromGuestPages } from "@/lib/auth/redirects";
@@ -27,25 +25,6 @@ export default async function SignupPage() {
         label: "Sign in",
         href: "/login",
       }}
-      finePrint={
-        <>
-          By continuing, you agree to our{" "}
-          <Link
-            href="/terms"
-            className="text-foreground underline-offset-4 hover:underline"
-          >
-            Terms
-          </Link>{" "}
-          and{" "}
-          <Link
-            href="/privacy"
-            className="text-foreground underline-offset-4 hover:underline"
-          >
-            Privacy Policy
-          </Link>
-          .
-        </>
-      }
     >
       <SignupForm />
     </AuthFlowShell>

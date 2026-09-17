@@ -9,8 +9,10 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Field,
+  FieldContent,
   FieldError,
   FieldGroup,
   FieldLabel,
@@ -32,6 +34,7 @@ export function SignupForm() {
       fullName: "",
       email: "",
       password: "",
+      agreeToTerms: false,
     },
   });
 
@@ -103,6 +106,10 @@ export function SignupForm() {
   }
 
   async function handleGoogleSignIn() {
+    // Google sign-up bypasses form submission, so enforce agreement here too.
+    const hasAgreed = await form.trigger("agreeToTerms");
+    if (!hasAgreed) return;
+
     try {
       setIsGoogleLoading(true);
       await authClient.signIn.social({
@@ -239,6 +246,63 @@ export function SignupForm() {
               {fieldState.invalid && (
                 <FieldError errors={[fieldState.error]} />
               )}
+            </Field>
+          )}
+        />
+
+        <Controller
+          name="agreeToTerms"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field
+              orientation="horizontal"
+              data-invalid={fieldState.invalid}
+              className="items-start"
+            >
+              <Checkbox
+                id="signup-terms"
+                checked={field.value ?? false}
+                onCheckedChange={(checked) => field.onChange(checked === true)}
+                onBlur={field.onBlur}
+                ref={field.ref}
+                aria-invalid={fieldState.invalid}
+                aria-describedby={
+                  fieldState.invalid ? "signup-terms-error" : undefined
+                }
+                className="mt-0.5"
+              />
+              <FieldContent>
+                <FieldLabel
+                  htmlFor="signup-terms"
+                  className="text-[12.5px] font-normal leading-relaxed text-muted-foreground"
+                >
+                  I agree to the{" "}
+                  <Link
+                    href="/terms"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-medium text-foreground underline underline-offset-4 hover:text-primary"
+                  >
+                    Terms of Service
+                  </Link>{" "}
+                  and{" "}
+                  <Link
+                    href="/privacy"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-medium text-foreground underline underline-offset-4 hover:text-primary"
+                  >
+                    Privacy Policy
+                  </Link>
+                  .
+                </FieldLabel>
+                {fieldState.invalid && (
+                  <FieldError
+                    id="signup-terms-error"
+                    errors={[fieldState.error]}
+                  />
+                )}
+              </FieldContent>
             </Field>
           )}
         />

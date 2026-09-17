@@ -39,6 +39,10 @@ export class CreateProfileDTO {
 
   @IsOptional()
   @IsString()
+  bookingUrl?: string;
+
+  @IsOptional()
+  @IsString()
   templateId?: string;
 
   @IsOptional()

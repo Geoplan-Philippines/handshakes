@@ -94,6 +94,7 @@ model Organization {
   slug                      String          @unique
   logo                      String?
   website                   String?
+  brochureUrl               String?         @map("brochure_url")
   metadata                  String?
 
   createdAt                 DateTime        @default(now()) @map("created_at")
@@ -143,6 +144,7 @@ model Profile {
   linkedinUsername          String?         @map("linkedin_username")
   whatsappNumber            String?         @map("whatsapp_number")
   viberNumber               String?         @map("viber_number")
+  bookingUrl                String?         @map("booking_url")
 
   organizationId            String?         @map("organization_id")
   organization              Organization?   @relation(fields: [organizationId], references: [id])

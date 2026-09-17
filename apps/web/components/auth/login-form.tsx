@@ -61,6 +61,18 @@ export function LoginForm() {
       });
 
       if (error) {
+        // Unverified account: better-auth blocks sign-in and auto-resends a
+        // verification email. Route the user to the verify page to continue.
+        if (error.code === "EMAIL_NOT_VERIFIED" || error.status === 403) {
+          toast.info("Verify your email first", {
+            description:
+              "Your email isn't verified yet. We've sent a fresh verification link to your inbox.",
+          });
+          window.location.assign(
+            `/verify-email?sent=1&email=${encodeURIComponent(data.email)}`,
+          );
+          return;
+        }
         throw new Error(error.message || "Login failed");
       }
 

@@ -2,7 +2,7 @@
 
 import { Profile } from "@/lib/services/nfc-cards.service";
 import { Button } from "@/components/ui/button";
-import { Mail, Phone, User, Briefcase, Link as LinkIcon } from "lucide-react";
+import { Mail, Phone, User, Briefcase, Link as LinkIcon, CalendarDays } from "lucide-react";
 
 type NfcProfileViewProps = {
   profile: Profile;
@@ -148,6 +148,11 @@ export function NfcProfileView({
               label="Viber"
               value={displayPhone(profile.viberNumber)}
               icon={Phone}
+            />
+            <Field
+              label="Booking Link"
+              value={profile.bookingUrl}
+              icon={CalendarDays}
             />
           </div>
         </div>
