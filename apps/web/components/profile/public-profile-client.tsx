@@ -150,8 +150,9 @@ export function PublicProfileClient({ profile }: PublicProfileClientProps) {
     `TEL;TYPE=CELL:${profile.contactNumber}`,
     `TEL;TYPE=Viber:${profile.viberNumber || profile.contactNumber}`,
     `EMAIL:${profile.email}`,
+    profile.companyAddress ? `ADR;TYPE=WORK:;;${profile.companyAddress};;;;` : "",
     "END:VCARD",
-  ].join("\n");
+  ].filter(Boolean).join("\n");
   const vCardHref = `data:text/vcard;charset=utf-8,${encodeURIComponent(vCard)}`;
 
   function toggleCardFlip() { setIsFlipped((v) => !v); }

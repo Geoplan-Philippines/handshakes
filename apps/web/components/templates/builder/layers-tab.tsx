@@ -369,6 +369,20 @@ export function LayersTab({ form, expandedSection, setExpandedSection }: LayersT
                                   </div>
                                 )}
                               />
+                              <Controller
+                                name="config.cardShowAddress"
+                                control={form.control}
+                                render={({ field }) => (
+                                  <div className="flex items-center justify-between">
+                                    <FieldLabel className="mb-0">Show Address</FieldLabel>
+                                    <Switch
+                                      checked={field.value !== false}
+                                      onCheckedChange={field.onChange}
+                                      className="scale-75"
+                                    />
+                                  </div>
+                                )}
+                              />
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                               <Controller

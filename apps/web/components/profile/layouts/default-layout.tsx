@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Building2, Mail, Phone } from "lucide-react";
+import { Building2, Mail, MapPin, Phone } from "lucide-react";
 import { CardProps } from "./types";
 import { cn } from "@/lib/utils";
 import { getCardPattern } from "./card-patterns";
@@ -102,6 +102,12 @@ export function DefaultLayout({ profile, config, isFlipped }: CardProps) {
               <span className="inline-flex items-center gap-1.5" style={textStyle}>
                 <Mail className="size-3" aria-hidden="true" />
                 {profile.email}
+              </span>
+            )}
+            {config?.cardShowAddress !== false && profile.companyAddress && (
+              <span className="inline-flex items-center gap-1.5" style={textStyle}>
+                <MapPin className="size-3 shrink-0" aria-hidden="true" />
+                {profile.companyAddress}
               </span>
             )}
           </div>

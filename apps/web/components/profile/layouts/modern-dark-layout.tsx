@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Building2, Mail, Phone } from "lucide-react";
+import { Building2, Mail, MapPin, Phone } from "lucide-react";
 import { CardProps } from "./types";
 import { getCardPattern } from "./card-patterns";
 import { cn } from "@/lib/utils";
@@ -85,6 +85,12 @@ export function ModernDarkLayout({ profile, config, isFlipped }: CardProps) {
               <span className="inline-flex items-center gap-2">
                 <Mail className="size-3" style={{ color: textColor, opacity: 0.9 }} />
                 {profile.email}
+              </span>
+            )}
+            {config?.cardShowAddress !== false && profile.companyAddress && (
+              <span className="inline-flex items-center gap-2">
+                <MapPin className="size-3 shrink-0" style={{ color: textColor, opacity: 0.9 }} />
+                {profile.companyAddress}
               </span>
             )}
           </div>

@@ -18,6 +18,7 @@ export const createProfileSchema = z.object({
     .refine(val => !val || val.replace(/\D/g, "").length === 10, "Viber number must be 10 digits")
     .refine(val => !val || val.replace(/\D/g, "").startsWith("9"), "Viber number must start with 9"),
   bookingUrl: z.string().url("Enter a valid link (https://...)").optional().or(z.literal("")),
+  companyAddress: z.string().trim().min(1, "Company address is required"),
   templateId: z.string().optional(),
 });
 

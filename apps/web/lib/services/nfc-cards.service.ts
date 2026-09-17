@@ -19,6 +19,7 @@ export type Profile = {
   whatsappNumber?: string | null;
   viberNumber?: string | null;
   bookingUrl?: string | null;
+  companyAddress?: string | null;
   organizationId?: string | null;
   ownerUserId?: string | null;
   createdAt: string;
@@ -81,6 +82,7 @@ export type TemplateConfig = {
   cardShowPattern?: boolean;
   cardShowEmail?: boolean;
   cardShowPhone?: boolean;
+  cardShowAddress?: boolean;
   cardDetailsAlignment?: "left" | "right" | "center";
   showSocialLabels?: boolean;
   socialsIconColor?: string;

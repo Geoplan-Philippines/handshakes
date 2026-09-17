@@ -11,7 +11,7 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
-import { Loader2, RotateCcw } from "lucide-react";
+import { Loader2, MapPin, RotateCcw } from "lucide-react";
 import { useParams } from "next/navigation";
 import { apiClient } from "@/lib/api/client";
 import { toast } from "sonner";
@@ -99,6 +99,7 @@ export function ProfileForm({ cardId, initialData, onSuccess, onCancel }: Profil
       whatsappNumber: stripPrefix(initialData.whatsappNumber),
       viberNumber: stripPrefix(initialData.viberNumber),
       bookingUrl: initialData.bookingUrl || "",
+      companyAddress: initialData.companyAddress || "",
       templateId: initialData.templateId || "tpl_default",
     } : {
       firstName: "",
@@ -111,6 +112,7 @@ export function ProfileForm({ cardId, initialData, onSuccess, onCancel }: Profil
       whatsappNumber: "",
       viberNumber: "",
       bookingUrl: "",
+      companyAddress: "",
       templateId: "tpl_default",
     },
   });
@@ -136,6 +138,7 @@ export function ProfileForm({ cardId, initialData, onSuccess, onCancel }: Profil
     whatsappNumber: formValues.whatsappNumber,
     viberNumber: formValues.viberNumber,
     bookingUrl: formValues.bookingUrl,
+    companyAddress: formValues.companyAddress || "123 Business Ave, Makati City",
     templateId: formValues.templateId,
     template: selectedTemplate,
     createdAt: new Date().toISOString(),
@@ -285,6 +288,28 @@ export function ProfileForm({ cardId, initialData, onSuccess, onCancel }: Profil
                         field.onChange(e);
                       }}
                       placeholder="912 345 6789"
+                      className="rounded-l-none rounded-r-lg border-l-0"
+                    />
+                  </div>
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
+
+            <Controller
+              name="companyAddress"
+              control={control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="companyAddress">Company Address</FieldLabel>
+                  <div className="relative flex">
+                    <span className="inline-flex items-center px-3 bg-muted text-muted-foreground rounded-l-lg border border-r-0 border-input">
+                      <MapPin className="size-4" aria-hidden="true" />
+                    </span>
+                    <Input
+                      {...field}
+                      id="companyAddress"
+                      placeholder="123 Business Ave, Makati City"
                       className="rounded-l-none rounded-r-lg border-l-0"
                     />
                   </div>
