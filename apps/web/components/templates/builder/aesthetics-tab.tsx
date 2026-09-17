@@ -28,13 +28,13 @@ export function AestheticsTab({ form }: AestheticsTabProps) {
               <Field>
                 <FieldLabel>Button Style</FieldLabel>
                 <Select onValueChange={field.onChange} value={field.value ?? "sharp"}>
-                  <SelectTrigger className="rounded-lg border-border h-10">
+                  <SelectTrigger className="w-full rounded-lg h-9 text-xs shadow-sm border-border focus-visible:ring-1 focus-visible:ring-foreground/20">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="rounded-lg">
-                    <SelectItem value="sharp">Sharp</SelectItem>
-                    <SelectItem value="rounded">Rounded</SelectItem>
-                    <SelectItem value="pill">Pill</SelectItem>
+                  <SelectContent position="popper" align="start" className="min-w-[170px] rounded-lg p-1">
+                    <SelectItem value="sharp" className="text-xs">Sharp</SelectItem>
+                    <SelectItem value="rounded" className="text-xs">Rounded</SelectItem>
+                    <SelectItem value="pill" className="text-xs">Pill</SelectItem>
                   </SelectContent>
                 </Select>
               </Field>
@@ -47,13 +47,13 @@ export function AestheticsTab({ form }: AestheticsTabProps) {
               <Field>
                 <FieldLabel>Avatar Frame</FieldLabel>
                 <Select onValueChange={field.onChange} value={field.value ?? "square"}>
-                  <SelectTrigger className="rounded-lg border-border h-10">
+                  <SelectTrigger className="w-full rounded-lg h-9 text-xs shadow-sm border-border focus-visible:ring-1 focus-visible:ring-foreground/20">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="rounded-lg">
-                    <SelectItem value="square">Square</SelectItem>
-                    <SelectItem value="circle">Circle</SelectItem>
-                    <SelectItem value="rounded">Rounded</SelectItem>
+                  <SelectContent position="popper" align="start" className="min-w-[170px] rounded-lg p-1">
+                    <SelectItem value="square" className="text-xs">Square</SelectItem>
+                    <SelectItem value="circle" className="text-xs">Circle</SelectItem>
+                    <SelectItem value="rounded" className="text-xs">Rounded</SelectItem>
                   </SelectContent>
                 </Select>
               </Field>
@@ -69,13 +69,13 @@ export function AestheticsTab({ form }: AestheticsTabProps) {
               <Field>
                 <FieldLabel>Page Spacing</FieldLabel>
                 <Select onValueChange={field.onChange} value={field.value ?? "relaxed"}>
-                  <SelectTrigger className="rounded-lg border-border h-10">
+                  <SelectTrigger className="w-full rounded-lg h-9 text-xs shadow-sm border-border focus-visible:ring-1 focus-visible:ring-foreground/20">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="rounded-lg">
-                    <SelectItem value="compact">Compact</SelectItem>
-                    <SelectItem value="relaxed">Relaxed</SelectItem>
-                    <SelectItem value="loose">Loose</SelectItem>
+                  <SelectContent position="popper" align="start" className="min-w-[170px] rounded-lg p-1">
+                    <SelectItem value="compact" className="text-xs">Compact</SelectItem>
+                    <SelectItem value="relaxed" className="text-xs">Relaxed</SelectItem>
+                    <SelectItem value="loose" className="text-xs">Loose</SelectItem>
                   </SelectContent>
                 </Select>
               </Field>

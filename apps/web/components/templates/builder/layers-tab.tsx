@@ -309,13 +309,13 @@ export function LayersTab({ form, expandedSection, setExpandedSection }: LayersT
                                     }} 
                                     value={field.value ?? "default"}
                                   >
-                                    <SelectTrigger className="rounded-lg h-9 border-border">
+                                    <SelectTrigger className="w-full rounded-lg h-9 text-xs shadow-sm border-border focus-visible:ring-1 focus-visible:ring-foreground/20">
                                       <SelectValue />
                                     </SelectTrigger>
-                                    <SelectContent className="rounded-lg">
-                                      <SelectItem value="default">Standard</SelectItem>
-                                      <SelectItem value="modern-dark">Modern Dark</SelectItem>
-                                      <SelectItem value="glass">Glass</SelectItem>
+                                    <SelectContent position="popper" align="start" className="min-w-[170px] rounded-lg p-1">
+                                      <SelectItem value="default" className="text-xs">Standard</SelectItem>
+                                      <SelectItem value="modern-dark" className="text-xs">Modern Dark</SelectItem>
+                                      <SelectItem value="glass" className="text-xs">Glass</SelectItem>
                                     </SelectContent>
                                   </Select>
                                 </Field>
@@ -418,15 +418,15 @@ export function LayersTab({ form, expandedSection, setExpandedSection }: LayersT
                                 <Field>
                                   <FieldLabel>Background pattern</FieldLabel>
                                   <Select onValueChange={field.onChange} value={field.value ?? "none"}>
-                                    <SelectTrigger className="rounded-lg h-9 border-border">
+                                    <SelectTrigger className="w-full rounded-lg h-9 text-xs shadow-sm border-border focus-visible:ring-1 focus-visible:ring-foreground/20">
                                       <SelectValue />
                                     </SelectTrigger>
-                                    <SelectContent className="rounded-lg">
-                                      <SelectItem value="none">None</SelectItem>
-                                      <SelectItem value="dots">Dots</SelectItem>
-                                      <SelectItem value="grid">Grid</SelectItem>
-                                      <SelectItem value="diagonal">Diagonal stripes</SelectItem>
-                                      <SelectItem value="waves">Waves</SelectItem>
+                                    <SelectContent position="popper" align="start" className="min-w-[170px] rounded-lg p-1">
+                                      <SelectItem value="none" className="text-xs">None</SelectItem>
+                                      <SelectItem value="dots" className="text-xs">Dots</SelectItem>
+                                      <SelectItem value="grid" className="text-xs">Grid</SelectItem>
+                                      <SelectItem value="diagonal" className="text-xs">Diagonal stripes</SelectItem>
+                                      <SelectItem value="waves" className="text-xs">Waves</SelectItem>
                                     </SelectContent>
                                   </Select>
                                 </Field>
