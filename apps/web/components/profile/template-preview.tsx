@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import {
   ArrowUpRight,
   BriefcaseBusiness,
+  CalendarDays,
   Download,
   Mail,
   Phone,
@@ -243,6 +244,7 @@ export function TemplatePreview({ profile, layoutKey, onSelectSection, isFlipped
                 { label: "Viber", icon: Phone },
                 { label: "LinkedIn", icon: BriefcaseBusiness },
                 { label: "Email", icon: Mail },
+                { label: "Book", icon: CalendarDays },
               ].map((action) => (
                 <div key={action.label} className={cn(
                   "group cursor-pointer",

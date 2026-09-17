@@ -98,6 +98,7 @@ export function ProfileForm({ cardId, initialData, onSuccess, onCancel }: Profil
       linkedinUsername: initialData.linkedinUsername || "",
       whatsappNumber: stripPrefix(initialData.whatsappNumber),
       viberNumber: stripPrefix(initialData.viberNumber),
+      bookingUrl: initialData.bookingUrl || "",
       templateId: initialData.templateId || "tpl_default",
     } : {
       firstName: "",
@@ -109,6 +110,7 @@ export function ProfileForm({ cardId, initialData, onSuccess, onCancel }: Profil
       linkedinUsername: "",
       whatsappNumber: "",
       viberNumber: "",
+      bookingUrl: "",
       templateId: "tpl_default",
     },
   });
@@ -133,6 +135,7 @@ export function ProfileForm({ cardId, initialData, onSuccess, onCancel }: Profil
     linkedinUsername: formValues.linkedinUsername,
     whatsappNumber: formValues.whatsappNumber,
     viberNumber: formValues.viberNumber,
+    bookingUrl: formValues.bookingUrl,
     templateId: formValues.templateId,
     template: selectedTemplate,
     createdAt: new Date().toISOString(),
@@ -383,6 +386,21 @@ export function ProfileForm({ cardId, initialData, onSuccess, onCancel }: Profil
                   )}
                 />
               </div>
+
+              <Controller
+                name="bookingUrl"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="bookingUrl">Booking Link (Optional)</FieldLabel>
+                    <Input {...field} id="bookingUrl" type="url" placeholder="https://calendly.com/your-name" className="rounded-lg" />
+                    <p className="text-[11px] text-muted-foreground">
+                      Add your booking link so visitors can schedule a meeting with you.
+                    </p>
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  </Field>
+                )}
+              />
             </div>
           </div>
 

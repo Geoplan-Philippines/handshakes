@@ -10,8 +10,10 @@ import {
   Loader2,
   Inbox,
   RefreshCw,
+  Send,
 } from "lucide-react";
 import Link from "next/link";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { getAuthApiBaseUrl } from "@/lib/api/config";
@@ -32,6 +34,8 @@ export function VerifyEmailStatus() {
   const [status, setStatus] = useState<VerificationStatus>("loading");
   const [email, setEmail] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isResending, setIsResending] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
 
   const token = searchParams.get("token");
   const sent = searchParams.get("sent") === "1";
@@ -64,6 +68,51 @@ export function VerifyEmailStatus() {
       );
     }
   }, []);
+
+  // Email to resend to: session email takes priority, else the one carried in the URL.
+  const resendEmail = email ?? emailFromQuery;
+
+  const resendVerification = useCallback(async () => {
+    if (!resendEmail || isResending || resendCooldown > 0) return;
+
+    setIsResending(true);
+    try {
+      const callbackURL = `${window.location.origin}/verify-email?verified=1`;
+      const { error } = await authClient.sendVerificationEmail({
+        email: resendEmail,
+        callbackURL,
+      });
+
+      if (error) {
+        throw new Error(error.message || "Could not resend verification email.");
+      }
+
+      toast.success("Verification email sent", {
+        description: `We sent a fresh link to ${resendEmail}. Check your inbox and spam folder.`,
+      });
+      setResendCooldown(30);
+    } catch (error) {
+      const rawMessage =
+        error instanceof Error
+          ? error.message
+          : "Could not resend verification email.";
+      const resendTestingRestriction =
+        "You can only send testing emails to your own email address";
+      const message = rawMessage.includes(resendTestingRestriction)
+        ? "Resend is in testing mode. You can only send verification emails to your verified recipient email. Verify a domain in Resend to send to any address."
+        : rawMessage;
+
+      toast.error("Couldn't resend email", { description: message });
+    } finally {
+      setIsResending(false);
+    }
+  }, [resendEmail, isResending, resendCooldown]);
+
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const timer = setTimeout(() => setResendCooldown((prev) => prev - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [resendCooldown]);
 
   useEffect(() => {
     if (errorCode === "TOKEN_EXPIRED") {
@@ -146,25 +195,50 @@ export function VerifyEmailStatus() {
             <Link href="/login">Continue to sign in</Link>
           </Button>
         ) : (
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full text-[13.5px] font-medium"
-            onClick={() => void checkVerificationStatus()}
-            disabled={status === "loading"}
-          >
-            {status === "loading" ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Checking…
-              </>
-            ) : (
-              <>
-                <RefreshCw className="h-4 w-4" />
-                Refresh status
-              </>
+          <>
+            {resendEmail && (
+              <Button
+                type="button"
+                className="w-full text-[13.5px] font-medium shadow-sm"
+                onClick={() => void resendVerification()}
+                disabled={isResending || resendCooldown > 0}
+              >
+                {isResending ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Sending…
+                  </>
+                ) : resendCooldown > 0 ? (
+                  `Resend available in ${resendCooldown}s`
+                ) : (
+                  <>
+                    <Send className="h-4 w-4" />
+                    Resend verification email
+                  </>
+                )}
+              </Button>
             )}
-          </Button>
+
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full text-[13.5px] font-medium"
+              onClick={() => void checkVerificationStatus()}
+              disabled={status === "loading"}
+            >
+              {status === "loading" ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Checking…
+                </>
+              ) : (
+                <>
+                  <RefreshCw className="h-4 w-4" />
+                  Refresh status
+                </>
+              )}
+            </Button>
+          </>
         )}
 
         <p className="text-center text-[12.5px] text-muted-foreground">

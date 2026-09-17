@@ -6,7 +6,9 @@ import { motion } from "motion/react";
 import {
   ArrowUpRight,
   BriefcaseBusiness,
+  CalendarDays,
   Download,
+  FileText,
   Mail,
   Phone,
   RotateCcw,
@@ -135,6 +137,7 @@ export function PublicProfileClient({ profile }: PublicProfileClientProps) {
       external: true,
     },
     { label: "Email", href: `mailto:${profile.email}`, icon: Mail },
+    { label: "Book", href: profile.bookingUrl || "#", icon: CalendarDays, external: true },
   ].filter((a) => a.href !== "#" && !a.href.endsWith("null"));
 
   // ─── vCard (shared) ───
@@ -280,6 +283,12 @@ export function PublicProfileClient({ profile }: PublicProfileClientProps) {
               Visit company
               <ArrowUpRight className="size-4" aria-hidden="true" />
             </a>
+            {profile.organization?.brochureUrl && (
+              <a href={profile.organization.brochureUrl} target="_blank" rel="noreferrer" className="flex h-11 items-center justify-center gap-2 rounded-md border border-border/70 bg-background/65 px-4 text-sm font-medium text-foreground shadow-sm backdrop-blur transition hover:bg-background focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:outline-none">
+                <FileText className="size-4" aria-hidden="true" />
+                Brochure
+              </a>
+            )}
           </div>
         </div>
 
@@ -435,6 +444,12 @@ export function PublicProfileClient({ profile }: PublicProfileClientProps) {
               {secondaryBtnLabel}
               <ArrowUpRight className="size-4" aria-hidden="true" />
             </a>
+            {profile.organization?.brochureUrl && (
+              <a href={profile.organization.brochureUrl} target="_blank" rel="noreferrer" className={cn("flex h-11 w-full items-center justify-center gap-2 border px-4 text-sm font-medium shadow-sm transition-all duration-500 bg-transparent", buttonRadius, (layoutKey === "glass" || layoutKey === "modern-dark") ? "bg-cream/5 border-cream/15 text-cream backdrop-blur-md hover:bg-cream/10" : "")} style={(layoutKey === "glass" || layoutKey === "modern-dark") ? {} : { borderColor: secondaryBtnColor, color: secondaryBtnText }}>
+                <FileText className="size-4" aria-hidden="true" />
+                Brochure
+              </a>
+            )}
           </div>
         );
 

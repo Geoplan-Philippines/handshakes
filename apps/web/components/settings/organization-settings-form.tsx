@@ -2,11 +2,11 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { organizationSchema, type OrganizationValues as OrganizationSettingsValues } from "@/lib/zod/organizations";
-import { Loader2, AlertCircle, Info, Trash2, TriangleAlert } from "lucide-react";
+import { Loader2, AlertCircle, Info, Trash2, TriangleAlert, Upload, FileText } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ImageUpload } from "@/components/shared/image-upload";
 import { PageHeader, Section, ActionArea } from "@/components/shared/page-shell";
@@ -55,16 +55,18 @@ export function OrganizationSettingsForm({ slug }: { slug: string }) {
   const [isUpdatingSlug, setIsUpdatingSlug] = useState(false);
   const [showSlugConfirm, setShowSlugConfirm] = useState(false);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const [isUploadingBrochure, setIsUploadingBrochure] = useState(false);
+  const brochureInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<OrganizationSettingsValues>({
     resolver: zodResolver(organizationSchema),
-    defaultValues: { name: "", slug: "", website: "" },
+    defaultValues: { name: "", slug: "", website: "", brochureUrl: "" },
   });
 
   // Populate form once data arrives
   useEffect(() => {
     if (orgData) {
-      form.reset({ name: orgData.name, slug: orgData.slug, website: orgData.website ?? "" });
+      form.reset({ name: orgData.name, slug: orgData.slug, website: orgData.website ?? "", brochureUrl: orgData.brochureUrl ?? "" });
       setLogoPreview(orgData.logo ?? null);
 
       // Sync active org
@@ -84,6 +86,32 @@ export function OrganizationSettingsForm({ slug }: { slug: string }) {
     const response = await apiClient.post<any>("/upload/image", formData);
     return response.url;
   };
+
+  async function selectBrochureFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.type !== "application/pdf") {
+      toast.error("Please select a PDF file");
+      if (brochureInputRef.current) brochureInputRef.current.value = "";
+      return;
+    }
+
+    setIsUploadingBrochure(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("folder", "identitree/brochures");
+      const response = await apiClient.post<{ url: string }>("/upload/file", formData);
+      form.setValue("brochureUrl", response.url, { shouldDirty: true, shouldValidate: true });
+      toast.success("Brochure uploaded");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to upload brochure");
+    } finally {
+      setIsUploadingBrochure(false);
+      if (brochureInputRef.current) brochureInputRef.current.value = "";
+    }
+  }
 
   async function onSubmit(
     data: OrganizationSettingsValues,
@@ -117,6 +145,7 @@ export function OrganizationSettingsForm({ slug }: { slug: string }) {
           name: data.name,
           slug: data.slug,
           ...(data.website ? { website: data.website } : {}),
+          ...(data.brochureUrl ? { brochureUrl: data.brochureUrl } : {}),
           ...(logoUrl ? { logo: logoUrl } : {}),
         },
       });
@@ -228,6 +257,59 @@ export function OrganizationSettingsForm({ slug }: { slug: string }) {
                 </Field>
               )}
             />
+            <Controller
+              name="brochureUrl"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="org-brochure">Company Brochure (Optional)</FieldLabel>
+                  <Input {...field} id="org-brochure" type="url" placeholder="https://acme-inc.com/brochure.pdf" />
+                  <div className="flex flex-wrap items-center gap-3">
+                    <input
+                      ref={brochureInputRef}
+                      type="file"
+                      accept="application/pdf"
+                      className="hidden"
+                      onChange={selectBrochureFile}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => brochureInputRef.current?.click()}
+                      disabled={isUploadingBrochure}
+                    >
+                      {isUploadingBrochure ? (
+                        <>
+                          <Loader2 className="size-3.5 animate-spin" />
+                          Uploading...
+                        </>
+                      ) : (
+                        <>
+                          <Upload className="size-3.5" />
+                          Upload PDF
+                        </>
+                      )}
+                    </Button>
+                    {field.value && (
+                      <a
+                        href={field.value}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground underline underline-offset-2 hover:text-foreground"
+                      >
+                        <FileText className="size-3.5" />
+                        View current
+                      </a>
+                    )}
+                  </div>
+                  <p className="text-[11px] text-muted-foreground">
+                    Upload a PDF or paste a link. Shows a &quot;Brochure&quot; button on every card in this organization.
+                  </p>
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
             <Field>
               <FieldLabel>Organization Logo</FieldLabel>
               <ImageUpload
@@ -248,7 +330,7 @@ export function OrganizationSettingsForm({ slug }: { slug: string }) {
               onClick={() => form.handleSubmit((data) => onSubmit(data, "general"))()}
               className="w-full sm:w-auto px-10"
                 disabled={
-                  (!form.formState.dirtyFields.name && !form.formState.dirtyFields.website && logoFile === null) ||
+                  (!form.formState.dirtyFields.name && !form.formState.dirtyFields.website && !form.formState.dirtyFields.brochureUrl && logoFile === null) ||
                 isSavingGeneral ||
                 form.formState.isSubmitting ||
                 isUploading
