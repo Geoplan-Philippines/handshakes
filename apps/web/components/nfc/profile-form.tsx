@@ -91,6 +91,7 @@ export function ProfileForm({ cardId, initialData, onSuccess, onCancel }: Profil
     defaultValues: initialData ? {
       firstName: initialData.firstName,
       lastName: initialData.lastName,
+      nickname: initialData.nickname || "",
       email: initialData.email,
       positionTitle: initialData.positionTitle,
       contactNumber: stripPrefix(initialData.contactNumber),
@@ -104,6 +105,7 @@ export function ProfileForm({ cardId, initialData, onSuccess, onCancel }: Profil
     } : {
       firstName: "",
       lastName: "",
+      nickname: "",
       email: "",
       positionTitle: "",
       contactNumber: "",
@@ -125,6 +127,7 @@ export function ProfileForm({ cardId, initialData, onSuccess, onCancel }: Profil
     id: initialData?.id || "preview",
     firstName: formValues.firstName || "First",
     lastName: formValues.lastName || "Last",
+    nickname: formValues.nickname || undefined,
     email: formValues.email || "email@example.com",
     positionTitle: formValues.positionTitle || "Position Title",
     contactNumber: formValues.contactNumber || "0912 345 6789",
@@ -245,6 +248,21 @@ export function ProfileForm({ cardId, initialData, onSuccess, onCancel }: Profil
                 )}
               />
             </div>
+
+            <Controller
+              name="nickname"
+              control={control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="nickname">Nickname (Optional)</FieldLabel>
+                  <Input {...field} id="nickname" placeholder="Johnny" className="rounded-lg" />
+                  <p className="text-[11px] text-muted-foreground">
+                    Displayed as the headline on the Geoplan card. Falls back to first name if left blank.
+                  </p>
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
 
             <Controller
               name="email"
@@ -464,10 +482,12 @@ export function ProfileForm({ cardId, initialData, onSuccess, onCancel }: Profil
 
             {/* Live Preview sits right under the selector */}
             <div className={cn(
-              "mt-4 border border-border p-8 rounded-lg transition-colors duration-500",
-              (previewProfile.template?.layoutKey === "glass" || previewProfile.template?.layoutKey === "modern-dark")
-                ? "bg-slate-950 border-slate-800"
-                : "bg-muted/30 border-border"
+              "mt-4 border p-8 rounded-lg transition-colors duration-500",
+              previewProfile.template?.layoutKey === "geoplan"
+                ? "bg-[#C8D8F5] border-[#C8D8F5]"
+                : (previewProfile.template?.layoutKey === "glass" || previewProfile.template?.layoutKey === "modern-dark")
+                  ? "bg-slate-950 border-slate-800"
+                  : "bg-muted/30 border-border"
             )}>
               <div className="mb-6 flex items-center justify-between">
                 <h4 className={cn(

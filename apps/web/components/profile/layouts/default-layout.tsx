@@ -5,11 +5,10 @@ import { Building2, Mail, MapPin, Phone } from "lucide-react";
 import { CardProps } from "./types";
 import { cn } from "@/lib/utils";
 import { getCardPattern } from "./card-patterns";
+import { CardQrCode } from "./card-qr-code";
 
 
 export function DefaultLayout({ profile, config, isFlipped }: CardProps) {
-  const qrCells = new Set([0, 1, 2, 4, 5, 7, 9, 10, 12, 13, 15, 17, 19, 20, 21, 23, 24]);
-
   const logoAlign = config?.cardLogoAlignment || "right";
   const nameAlign = config?.cardNameAlignment || "left";
   const showPattern = config?.cardShowPattern !== false;
@@ -143,14 +142,7 @@ export function DefaultLayout({ profile, config, isFlipped }: CardProps) {
           </div>
 
           {config?.showQrCode !== false && (
-            <div className="grid size-20 shrink-0 grid-cols-5 gap-1 rounded-md bg-white p-1.5 shadow-[0_16px_40px_rgba(0,0,0,0.25)]">
-              {Array.from({ length: 25 }).map((_, index) => (
-                <span
-                  key={index}
-                  className={qrCells.has(index) ? "rounded-[1.5px] bg-foreground" : "rounded-[1.5px] bg-transparent"}
-                />
-              ))}
-            </div>
+            <CardQrCode className="size-20 shrink-0 rounded-md p-1.5 shadow-[0_16px_40px_rgba(0,0,0,0.25)]" />
           )}
         </div>
       </div>

@@ -57,6 +57,45 @@ async function seedTemplates() {
       });
       console.log(`✅ Upserted template: ${template.name} (${template.id})`);
     }
+
+    // Geoplan-exclusive template: only visible to members of the Geoplan
+    // organization (availability ORG_ONLY, scoped by organizationId).
+    const geoplanSlug = process.env.GEOPLAN_ORG_SLUG || 'geoplan';
+    const geoplanOrg = await prisma.organization.findFirst({
+      where: {
+        OR: [
+          { slug: geoplanSlug },
+          { name: { contains: 'geoplan', mode: 'insensitive' } },
+        ],
+      },
+    });
+
+    if (geoplanOrg) {
+      await prisma.template.upsert({
+        where: { id: 'tpl_geoplan' },
+        update: { organizationId: geoplanOrg.id },
+        create: {
+          id: 'tpl_geoplan',
+          name: 'Geoplan',
+          layoutKey: 'geoplan',
+          availability: TemplateAvailability.ORG_ONLY,
+          organizationId: geoplanOrg.id,
+          category: 'Corporate',
+          config: {
+            cardLayoutKey: 'geoplan',
+            primaryColor: '#0C55A3',
+            accentColor: '#0C55A3',
+          },
+        },
+      });
+      console.log(`✅ Upserted Geoplan template for org "${geoplanOrg.name}" (${geoplanOrg.id})`);
+    } else {
+      console.warn(
+        `⚠️  Geoplan organization not found (looked up slug "${geoplanSlug}" / name ~ "geoplan"). ` +
+          'Skipped tpl_geoplan. Set GEOPLAN_ORG_SLUG and re-run to attach it.',
+      );
+    }
+
     console.log('✨ Seeding completed!');
   } catch (error) {
     console.error('❌ Seeding failed:', error);

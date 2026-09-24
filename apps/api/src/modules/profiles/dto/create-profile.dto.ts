@@ -9,6 +9,10 @@ export class CreateProfileDTO {
   @IsString()
   lastName!: string;
 
+  @IsOptional()
+  @IsString()
+  nickname?: string;
+
   @IsNotEmpty()
   @IsEmail()
   email!: string;

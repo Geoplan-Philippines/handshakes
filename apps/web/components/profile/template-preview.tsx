@@ -84,13 +84,23 @@ export function TemplatePreview({ profile, layoutKey, onSelectSection, isFlipped
       button: "bg-blue-600 hover:bg-blue-700 text-white border-none shadow-xl",
       secondaryButton: "bg-white/5 border-white/10 text-white hover:bg-white/10",
       footer: "text-slate-600"
+    },
+    geoplan: {
+      bg: "bg-[#C8D8F5]",
+      text: "text-neutral-900",
+      subtext: "text-neutral-500",
+      badge: "border-[#0C55A3]/20 bg-[#0C55A3]/5 text-[#0C55A3]",
+      avatar: "border-white shadow-[0_18px_45px_rgba(12,85,163,0.16)] ring-[#0C55A3]/10",
+      button: "shadow-sm",
+      secondaryButton: "border-[#0C55A3]/70 bg-transparent hover:bg-[#0C55A3] hover:text-white text-[#0C55A3]",
+      footer: "text-neutral-400"
     }
   };
 
   const theme = themes[layoutKey as keyof typeof themes] || themes.default;
-  const primaryColor = config?.primaryColor || (layoutKey === "modern-dark" ? "#3b82f6" : "#0f172a");
+  const primaryColor = config?.primaryColor || (layoutKey === "modern-dark" ? "#3b82f6" : layoutKey === "geoplan" ? "#0C55A3" : "#0f172a");
   const accentColor = config?.accentColor || primaryColor;
-  const textColor = config?.textColor || (layoutKey === "default" ? "#0f172a" : "#ffffff");
+  const textColor = config?.textColor || (layoutKey === "default" || layoutKey === "geoplan" ? "#0f172a" : "#ffffff");
 
   let backgroundStyle: any = {};
   if (config?.backgroundType === "gradient" && config.backgroundGradient) {

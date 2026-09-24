@@ -137,6 +137,7 @@ model Profile {
   templateKey               String          @default("default") @map("template_key")
   firstName                 String          @map("first_name")
   lastName                  String          @map("last_name")
+  nickname                  String?         @map("nickname")
   email                     String
   avatarUrl                 String?         @map("avatar_url")
   positionTitle             String          @map("position_title")

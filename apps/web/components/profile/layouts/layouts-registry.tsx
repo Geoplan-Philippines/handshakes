@@ -3,6 +3,7 @@ import { Profile, TemplateConfig } from "@/lib/services/nfc-cards.service";
 import { DefaultLayout as DefaultCard } from "./default-layout";
 import { ModernDarkLayout as ModernDarkCard } from "./modern-dark-layout";
 import { GlassLayout as GlassCard } from "./glass-layout";
+import { GeoplanLayout as GeoplanCard } from "./geoplan-layout";
 import { CardProps } from "./types";
 
 export type CardRegistry = Record<string, ComponentType<CardProps>>;
@@ -11,6 +12,7 @@ export const CARD_REGISTRY: CardRegistry = {
   default: DefaultCard,
   "modern-dark": ModernDarkCard,
   glass: GlassCard,
+  geoplan: GeoplanCard,
 };
 
 export function renderProfileCard(profile: Profile, isFlipped: boolean, forcedLayoutKey?: string) {

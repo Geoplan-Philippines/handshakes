@@ -163,9 +163,10 @@ export function PublicProfileClient({ profile }: PublicProfileClientProps) {
   }
 
   // ─── Config-derived values (only used when hasConfig) ───
-  const primaryColor = config?.primaryColor || (layoutKey === "default" ? "var(--forest-ink)" : "var(--forest)");
-  const accentColor = config?.accentColor || (layoutKey === "default" ? primaryColor : "var(--brass)");
-  const textColor = config?.textColor || (layoutKey === "default" ? "var(--forest-ink)" : "var(--cream)");
+  const isLightLayout = layoutKey === "default" || layoutKey === "geoplan";
+  const primaryColor = config?.primaryColor || (layoutKey === "geoplan" ? "#0C55A3" : layoutKey === "default" ? "var(--forest-ink)" : "var(--forest)");
+  const accentColor = config?.accentColor || (isLightLayout ? primaryColor : "var(--brass)");
+  const textColor = config?.textColor || (layoutKey === "geoplan" ? "#111827" : layoutKey === "default" ? "var(--forest-ink)" : "var(--cream)");
 
   const buttonRadius = { sharp: "rounded-lg", rounded: "rounded-2xl", pill: "rounded-full" }[config?.buttonStyle || "sharp"];
   const avatarRadius = { square: "rounded-lg", circle: "rounded-full", rounded: "rounded-2xl" }[config?.avatarStyle || "circle"];
@@ -198,6 +199,8 @@ export function PublicProfileClient({ profile }: PublicProfileClientProps) {
     "modern-dark": { bg: "bg-forest-ink", text: "text-cream", subtext: "text-cream/55", badge: "border-brass/30 bg-brass/10 text-brass", avatar: "border-cream/10 p-1 ring-cream/5 shadow-2xl", button: "shadow-xl", secondaryButton: "border-cream/15 bg-cream/5 text-cream", footer: "text-cream/40" },
     // Frosted glass over forest — warm brass glow, no purple.
     glass: { bg: "bg-forest-ink bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(198,160,90,0.12),rgba(255,255,255,0))]", text: "text-cream", subtext: "text-cream/55", badge: "border-cream/10 bg-cream/5 text-brass backdrop-blur-md", avatar: "border-cream/10 ring-cream/5 shadow-2xl", button: "shadow-xl", secondaryButton: "bg-cream/5 border-cream/10 text-cream", footer: "text-cream/40" },
+    // Geoplan corporate — soft brand-blue surface so the white card reads without a shadow.
+    geoplan: { bg: "bg-[#C8D8F5]", text: "text-neutral-900", subtext: "text-neutral-500", badge: "border-[#0C55A3]/20 bg-white/60 text-[#0C55A3]", avatar: "border-white shadow-[0_18px_45px_rgba(12,85,163,0.16)] ring-[#0C55A3]/10", button: "shadow-sm", secondaryButton: "border-[#0C55A3]/70 bg-transparent text-[#0C55A3]", footer: "text-neutral-500" },
   };
   const theme = themes[layoutKey as keyof typeof themes] || themes.default;
 

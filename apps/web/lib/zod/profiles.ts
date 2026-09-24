@@ -3,6 +3,7 @@ import { z } from "zod";
 export const createProfileSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
+  nickname: z.string().optional(),
   email: z.string().min(1, "Email is required").email("Invalid email address"),
   positionTitle: z.string().min(1, "Position title is required"),
   contactNumber: z.string()
