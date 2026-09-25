@@ -18,6 +18,10 @@ export function ModernDarkLayout({ profile, config, isFlipped }: CardProps) {
 
   const logoAlign = config?.cardLogoAlignment || "right";
   const nameAlign = config?.cardNameAlignment || "left";
+  const brandingText = config?.cardBrandingText?.trim();
+  const brandingPlacement = config?.cardBrandingPlacement || "back";
+  const showBrandingFront = !!brandingText && brandingPlacement === "front";
+  const showBrandingBack = !!brandingText && brandingPlacement === "back";
 
   const getAlignClass = (align: string) => {
     if (align === "left") return "justify-start text-left items-start";
@@ -71,6 +75,11 @@ export function ModernDarkLayout({ profile, config, isFlipped }: CardProps) {
             <p className="mt-1 text-[10px] font-bold uppercase tracking-widest" style={{ color: textColor, opacity: 0.4 }}>
               {profile.positionTitle}
             </p>
+            {showBrandingFront && (
+              <p className="mt-2 max-w-[16rem] text-[0.6rem] font-medium leading-snug line-clamp-2 whitespace-pre-line" style={{ color: textColor, opacity: 0.55 }}>
+                {brandingText}
+              </p>
+            )}
           </div>
 
           <div className={cn("grid gap-1.5 text-[0.65rem] font-medium", getAlignClass(config?.cardDetailsAlignment || nameAlign))} style={{ color: textColor, opacity: 0.7 }}>
@@ -114,8 +123,8 @@ export function ModernDarkLayout({ profile, config, isFlipped }: CardProps) {
             <p className="text-xl font-semibold leading-tight">
               Modern ID.
             </p>
-            <p className="mt-3 max-w-[14rem] text-xs leading-5 text-cream/50">
-              Tap to connect instantly with my digital profile.
+            <p className="mt-3 max-w-[14rem] text-xs leading-5 text-cream/50 whitespace-pre-line">
+              {showBrandingBack ? brandingText : "Tap to connect instantly with my digital profile."}
             </p>
           </div>
 

@@ -15,6 +15,10 @@ export function DefaultLayout({ profile, config, isFlipped }: CardProps) {
   const textColor = config?.cardTextColor;
   const pattern = getCardPattern(config?.cardPattern);
   const bgImage = config?.cardBackgroundImage;
+  const brandingText = config?.cardBrandingText?.trim();
+  const brandingPlacement = config?.cardBrandingPlacement || "back";
+  const showBrandingFront = !!brandingText && brandingPlacement === "front";
+  const showBrandingBack = !!brandingText && brandingPlacement === "back";
 
   const getAlignClass = (align: string) => {
     if (align === "left") return "justify-start text-left items-start";
@@ -88,6 +92,11 @@ export function DefaultLayout({ profile, config, isFlipped }: CardProps) {
             <p className="mt-2 text-xs font-medium opacity-70" style={textStyle}>
               {profile.positionTitle}
             </p>
+            {showBrandingFront && (
+              <p className="mt-2 max-w-[16rem] text-[0.6rem] font-medium leading-snug opacity-60 line-clamp-2 whitespace-pre-line" style={textStyle}>
+                {brandingText}
+              </p>
+            )}
           </div>
 
           <div className={cn("grid gap-1.5 text-[0.65rem] font-medium opacity-70", getAlignClass(config?.cardDetailsAlignment || nameAlign))}>
@@ -136,8 +145,8 @@ export function DefaultLayout({ profile, config, isFlipped }: CardProps) {
             <p className="text-lg font-semibold leading-tight">
               Connect with clarity.
             </p>
-            <p className="mt-2 max-w-[12rem] text-[10px] leading-relaxed text-cream/65">
-              Digital identity powered by NFC technology.
+            <p className="mt-2 max-w-[12rem] text-[10px] leading-relaxed text-cream/65 whitespace-pre-line">
+              {showBrandingBack ? brandingText : "Digital identity powered by NFC technology."}
             </p>
           </div>
 

@@ -384,6 +384,47 @@ export function LayersTab({ form, expandedSection, setExpandedSection }: LayersT
                                 )}
                               />
                             </div>
+                            <div className="space-y-3 border-t border-border/50 pt-4 mt-2">
+                              <div className="flex items-center justify-between">
+                                <FieldLabel className="mb-0">Branding text</FieldLabel>
+                                <Controller
+                                  name="config.cardBrandingPlacement"
+                                  control={form.control}
+                                  render={({ field }) => (
+                                    <div className="flex gap-1 bg-muted p-1 rounded-lg border border-border w-fit">
+                                      {(["front", "back"] as const).map((side) => (
+                                        <Button
+                                          key={side}
+                                          type="button"
+                                          size="sm"
+                                          variant={(field.value ?? "back") === side ? "default" : "ghost"}
+                                          className="h-6 px-2.5 rounded-lg text-[9px] font-bold uppercase"
+                                          onClick={() => field.onChange(side)}
+                                        >
+                                          {side}
+                                        </Button>
+                                      ))}
+                                    </div>
+                                  )}
+                                />
+                              </div>
+                              <Controller
+                                name="config.cardBrandingText"
+                                control={form.control}
+                                render={({ field }) => (
+                                  <Textarea
+                                    {...field}
+                                    value={field.value ?? ""}
+                                    rows={2}
+                                    placeholder="e.g. Real People | Real Service | Real Result"
+                                    className="text-xs rounded-lg border-border"
+                                  />
+                                )}
+                              />
+                              <p className="text-[9px] text-muted-foreground uppercase font-bold">
+                                Shown on the {form.watch("config.cardBrandingPlacement") ?? "back"} of the card
+                              </p>
+                            </div>
                             <div className="grid grid-cols-2 gap-4">
                               <Controller
                                 name="config.cardPrimaryColor"

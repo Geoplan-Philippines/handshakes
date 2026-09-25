@@ -85,6 +85,8 @@ export type TemplateConfig = {
   cardShowPhone?: boolean;
   cardShowAddress?: boolean;
   cardDetailsAlignment?: "left" | "right" | "center";
+  cardBrandingText?: string;
+  cardBrandingPlacement?: "front" | "back";
   showSocialLabels?: boolean;
   socialsIconColor?: string;
   socialsButtonColor?: string;

@@ -14,6 +14,10 @@ export function GlassLayout({ profile, config, isFlipped }: CardProps) {
   const textColor = config?.cardTextColor || "var(--cream)";
   const pattern = getCardPattern(config?.cardPattern);
   const bgImage = config?.cardBackgroundImage;
+  const brandingText = config?.cardBrandingText?.trim();
+  const brandingPlacement = config?.cardBrandingPlacement || "back";
+  const showBrandingFront = !!brandingText && brandingPlacement === "front";
+  const showBrandingBack = !!brandingText && brandingPlacement === "back";
 
   const getAlignClass = (align: string) => {
     if (align === "left") return "justify-start text-left items-start";
@@ -85,6 +89,11 @@ export function GlassLayout({ profile, config, isFlipped }: CardProps) {
             <p className="mt-1.5 text-[10px] font-medium" style={{ color: textColor, opacity: 0.65 }}>
               {profile.positionTitle}
             </p>
+            {showBrandingFront && (
+              <p className="mt-2 max-w-[16rem] text-[0.6rem] font-medium leading-snug line-clamp-2 whitespace-pre-line" style={{ color: textColor, opacity: 0.55 }}>
+                {brandingText}
+              </p>
+            )}
           </div>
 
           <div className={cn("grid gap-1.5 text-[0.65rem] font-medium", getAlignClass(config?.cardDetailsAlignment || nameAlign))}>
@@ -130,8 +139,8 @@ export function GlassLayout({ profile, config, isFlipped }: CardProps) {
             <p className="text-lg font-bold leading-tight text-white">
               Glass ID.
             </p>
-            <p className="mt-2 max-w-[12rem] text-[10px] leading-relaxed text-white/55">
-              Elegance meets technology in your pocket.
+            <p className="mt-2 max-w-[12rem] text-[10px] leading-relaxed text-white/55 whitespace-pre-line">
+              {showBrandingBack ? brandingText : "Elegance meets technology in your pocket."}
             </p>
           </div>
 
