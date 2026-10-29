@@ -3,13 +3,17 @@ import { cn } from "@/lib/utils";
 interface PageHeaderProps {
   title: string;
   description?: string;
+  action?: React.ReactNode;
   className?: string;
 }
 
-export function PageHeader({ title, description, className }: PageHeaderProps) {
+export function PageHeader({ title, description, action, className }: PageHeaderProps) {
   return (
     <div className={cn("space-y-1", className)}>
-      <h1 className="text-2xl font-black tracking-tight uppercase">{title}</h1>
+      <div className="flex items-center justify-between gap-4">
+        <h1 className="text-2xl font-black tracking-tight uppercase">{title}</h1>
+        {action && <div className="shrink-0">{action}</div>}
+      </div>
       {description && (
         <p className="text-sm text-muted-foreground">{description}</p>
       )}

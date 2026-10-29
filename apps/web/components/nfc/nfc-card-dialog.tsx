@@ -15,6 +15,7 @@ import { NfcCard } from "@/lib/services/nfc-cards.service";
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
 import { useParams } from "next/navigation";
+import posthog from "posthog-js";
 
 interface NfcCardDialogProps {
   initialData?: NfcCard | null;
@@ -76,9 +77,20 @@ export function NfcCardDialog({ initialData, trigger, onSuccess, open, onOpenCha
       if (isEditing && initialData) {
         await updateMutation.mutateAsync({ id: initialData.id, payload: values });
         toast.success("NFC card updated successfully");
+        posthog.capture("card_updated", {
+          cardId: initialData.id,
+          cardType: values.cardType,
+          name: values.name,
+          slug: slug,
+        });
       } else {
         await createMutation.mutateAsync(values);
         toast.success("NFC card created successfully");
+        posthog.capture("card_created", {
+          cardType: values.cardType,
+          name: values.name,
+          slug: slug,
+        });
       }
       actualOnOpenChange(false);
       reset();
@@ -111,8 +123,8 @@ export function NfcCardDialog({ initialData, trigger, onSuccess, open, onOpenCha
             />
             <div className="bg-muted/50 p-2 rounded border border-dashed border-muted-foreground/20">
               <p className="text-[10px] uppercase font-bold text-muted-foreground mb-1 tracking-wider">Public URL Preview</p>
-              <p className="text-xs font-mono break-all text-blue-600 dark:text-blue-400">
-                identitree.geoplanph.com/{slug}/{name ? name.toLowerCase().trim().replace(/[^\w\s-]/g, "").replace(/[\s_-]+/g, "-") : "..."}
+              <p className="text-xs font-mono break-all text-foreground">
+                handshakes.cards/{slug}/{name ? name.toLowerCase().trim().replace(/[^\w\s-]/g, "").replace(/[\s_-]+/g, "-") : "..."}
               </p>
             </div>
             {errors.name && <p className="text-xs text-red-500 mt-0.5">{errors.name.message}</p>}

@@ -4,26 +4,25 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import {
   BarChart3,
-  Bell,
   ContactRound,
-  CreditCard,
-  GalleryVerticalEnd,
   IdCard,
   LayoutDashboard,
   LayoutTemplate,
-  Nfc,
   LogOut,
+  Nfc,
   Palette,
   Plus,
   Settings,
   Users,
-  Zap,
   Wrench,
   type LucideIcon,
 } from "lucide-react";
+import posthog from "posthog-js";
+import { toast } from "sonner";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { WingMark } from "@/components/shared/logo";
 import { NfcCardDialog } from "@/components/nfc/nfc-card-dialog";
 import { NotificationsPopover } from "@/components/dashboard/notifications-popover";
 import {
@@ -44,6 +43,7 @@ import {
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { authClient } from "@/lib/auth-client";
 import { useParams, usePathname, useRouter } from "next/navigation";
+import React from "react";
 
 type DashboardShellProps = {
   children: ReactNode;
@@ -56,6 +56,10 @@ type DashboardLink = {
   isActive?: boolean;
 };
 
+// Coming-soon nav features are hidden for now. Flip this to `true` to show the
+// "Coming Soon" and "Growth" sidebar groups again once the features are built.
+const SHOW_COMING_SOON: boolean = false;
+
 
 
 function DashboardSidebar() {
@@ -67,8 +71,14 @@ function DashboardSidebar() {
   const { data: sessionData } = authClient.useSession();
   const user = sessionData?.user;
 
+  const [isMounted, setIsMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const getInitials = (name?: string | null) => {
-    if (!name) return "ID";
+    if (!name) return "HS";
     return name
       .split(" ")
       .map((n) => n[0])
@@ -80,6 +90,7 @@ function DashboardSidebar() {
   const workspaceLinks: DashboardLink[] = [
     { label: "Overview", href: `/dashboard/${slug}`, icon: LayoutDashboard },
     { label: "Cards", href: `/dashboard/${slug}/cards`, icon: IdCard },
+    { label: "Templates", href: `/dashboard/${slug}/templates`, icon: LayoutTemplate },
     { label: "Analytics", href: `/dashboard/${slug}/analytics`, icon: BarChart3 },
     { label: "Tools", href: `/dashboard/${slug}/tools`, icon: Wrench },
   ];
@@ -87,7 +98,6 @@ function DashboardSidebar() {
   const comingSoonLinks: DashboardLink[] = [
     { label: "Contacts", href: "#", icon: ContactRound },
     { label: "Teams", href: "#", icon: Users },
-    { label: "Templates", href: "#", icon: LayoutTemplate },
   ];
 
   const growthLinks: DashboardLink[] = [
@@ -96,19 +106,19 @@ function DashboardSidebar() {
   ];
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-border h-svh">
+    <Sidebar collapsible="icon" className="border-r border-sidebar-border h-svh">
       {/* Hand-rolled header to perfectly match the main header height (h-14) without extra gaps */}
-      <div className="flex h-14 shrink-0 items-center border-b border-border px-3">
+      <div className="flex h-14 shrink-0 items-center border-b border-sidebar-border px-3">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild size="lg" className="h-10 rounded-md">
               <Link href="/dashboard">
-                <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-foreground text-background">
-                  <GalleryVerticalEnd className="size-3.5" aria-hidden="true" />
+                <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-brass">
+                  <WingMark variant="gilt" className="w-4" />
                 </span>
                 <span className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold text-[13px]">Identitree</span>
-                  <span className="truncate text-[11px] text-muted-foreground">
+                  <span className="truncate font-display font-semibold lowercase text-[13px]">handshakes</span>
+                  <span className="truncate text-[11px] text-sidebar-foreground/70">
                     NFC business cards
                   </span>
                 </span>
@@ -120,9 +130,9 @@ function DashboardSidebar() {
 
       <SidebarContent className="pt-2">
         <SidebarGroup>
-          <SidebarGroupLabel>Workspace</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-brass">Workspace</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="gap-1">
               {workspaceLinks.map((item) => {
                 const isOverview = item.href === `/dashboard/${slug}`;
                 const isActive = isOverview
@@ -151,53 +161,70 @@ function DashboardSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarGroup>
-          <SidebarGroupLabel>Coming Soon</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {comingSoonLinks.map((item) => (
-                <SidebarMenuItem key={item.label}>
-                  <SidebarMenuButton
-                    asChild
-                    tooltip={`${item.label} (Coming Soon)`}
-                    disabled
-                  >
-                    <Link href={item.href} className="opacity-50 cursor-not-allowed">
+        {SHOW_COMING_SOON && (
+          <SidebarGroup>
+            <SidebarGroupLabel className="text-brass">Coming Soon</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu className="gap-1">
+                {comingSoonLinks.map((item) => (
+                  <SidebarMenuItem key={item.label}>
+                    <SidebarMenuButton
+                      tooltip={`${item.label} (Coming Soon)`}
+                      className="opacity-60 hover:opacity-100 transition-opacity"
+                      onClick={() => {
+                        posthog.capture("coming_soon_clicked", {
+                          feature: item.label,
+                          category: "Coming Soon",
+                        });
+                        toast.info(`${item.label} is coming soon!`, {
+                          description: "We're working hard to bring this feature to you.",
+                        });
+                      }}
+                    >
                       <item.icon aria-hidden="true" />
                       <span>{item.label}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
 
-        <SidebarGroup>
-          <SidebarGroupLabel>Growth (Coming Soon)</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {growthLinks.map((item) => (
-                <SidebarMenuItem key={item.label}>
-                  <SidebarMenuButton
-                    asChild
-                    tooltip={`${item.label} (Coming Soon)`}
-                    disabled
-                  >
-                    <Link href={item.href} className="opacity-50 cursor-not-allowed">
+        {SHOW_COMING_SOON && (
+          <SidebarGroup>
+            <SidebarGroupLabel className="text-brass">Growth (Coming Soon)</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu className="gap-1">
+                {growthLinks.map((item) => (
+                  <SidebarMenuItem key={item.label}>
+                    <SidebarMenuButton
+                      tooltip={`${item.label} (Coming Soon)`}
+                      className="opacity-60 hover:opacity-100 transition-opacity"
+                      onClick={() => {
+                        posthog.capture("coming_soon_clicked", {
+                          feature: item.label,
+                          category: "Growth",
+                        });
+                        toast.info(`${item.label} is coming soon!`, {
+                          description: "We're working hard to bring this feature to you.",
+                        });
+                      }}
+                    >
                       <item.icon aria-hidden="true" />
                       <span>{item.label}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
+
       </SidebarContent>
 
       <SidebarFooter className="p-3 border-t border-transparent">
-        <SidebarMenu>
+        <SidebarMenu className="gap-1">
           <SidebarMenuItem>
             <SidebarMenuButton asChild tooltip="Settings">
               <Link href={`/dashboard/${slug}/settings`}>
@@ -211,6 +238,7 @@ function DashboardSidebar() {
               tooltip="Log out"
               onClick={async () => {
                 await authClient.signOut();
+                posthog.reset();
                 router.push("/login");
               }}
             >
@@ -229,15 +257,15 @@ function DashboardSidebar() {
                     />
                   )}
                   <AvatarFallback className="text-xs font-medium">
-                    {getInitials(user?.name)}
+                    {isMounted ? getInitials(user?.name) : "HS"}
                   </AvatarFallback>
                 </Avatar>
                 <span className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate text-[13px] font-medium">
-                    {user?.name || "User"}
+                    {isMounted ? (user?.name || "User") : "User"}
                   </span>
-                  <span className="truncate text-[11px] text-muted-foreground">
-                    {user?.email || "Pro plan"}
+                  <span className="truncate text-[11px] text-sidebar-foreground/70">
+                    {isMounted ? (user?.email || "Account") : "Account"}
                   </span>
                 </span>
               </Link>
@@ -253,38 +281,22 @@ function DashboardSidebar() {
 
 export function DashboardShell({ children }: DashboardShellProps) {
   return (
-    <div className="flex min-h-screen flex-col bg-background">
-      {/* Top promotional banner (fixed to top) */}
-      {/* <div className="fixed inset-x-0 top-0 z-50 flex h-12 w-full items-center justify-center gap-3 bg-[#131415] px-4 py-2.5 text-sm font-medium text-white">
-        <span className="flex items-center gap-2">
-          Try Pro for free — <span className="hidden opacity-80 sm:inline text-white/80">our most popular plan for content creators and businesses.</span>
-        </span>
-        <Link
-          href="/pricing"
-          className="flex h-7 items-center justify-center rounded-full bg-[#E5F5EC]/10 px-3 text-[11px] font-bold text-[#10B981] border border-[#10B981]/20 transition-colors hover:bg-[#10B981]/20 hover:border-[#10B981]/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/40 uppercase tracking-wide"
-        >
-          <Zap className="mr-1.5 size-[11px] fill-current" aria-hidden="true" />
-          Upgrade
-        </Link>
-      </div> */}
-
+    <div className="flex min-h-[100dvh] flex-col bg-background">
       <TooltipProvider>
-        {/* Set SidebarProvider to not manage overall height since we have a fixed banner */}
         <SidebarProvider className="flex-1 overflow-hidden">
           <DashboardSidebar />
-          {/* Add mt-12 so the inset starts below the banner */}
           <SidebarInset className="flex flex-col overflow-hidden bg-background h-svh">
-            <header className="flex-none flex h-14 items-center justify-between gap-3 border-b border-border bg-background px-4 md:px-5">
+            <header className="flex-none flex h-14 items-center justify-between gap-3 border-b border-sidebar-border bg-sidebar px-4 text-sidebar-foreground md:px-5">
               <div className="flex items-center gap-3">
                 <SidebarTrigger
-                  className="-ml-1 size-8 rounded-none"
+                  className="-ml-1 size-8 rounded-lg text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                   aria-label="Toggle sidebar"
                 />
 
-                <div className="h-4 w-px bg-border hidden sm:block" aria-hidden="true" />
+                <div className="h-4 w-px bg-sidebar-border hidden sm:block" aria-hidden="true" />
 
                 <div className="min-w-0">
-                  <h2 className="truncate text-[13px] font-black uppercase tracking-widest text-foreground">
+                  <h2 className="truncate font-display text-sm font-semibold tracking-tight text-sidebar-foreground">
                     Management
                   </h2>
                 </div>
@@ -295,8 +307,8 @@ export function DashboardShell({ children }: DashboardShellProps) {
 
                 <NfcCardDialog
                   trigger={
-                    <Button>
-                      <Plus className="size-3.5 mr-1.5" aria-hidden="true" />
+                    <Button className="text-sidebar-foreground">
+                      <Plus className="size-3.5" aria-hidden="true" />
                       New card
                     </Button>
                   }

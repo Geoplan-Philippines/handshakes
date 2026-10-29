@@ -3,6 +3,7 @@ import { z } from "zod";
 export const createProfileSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
+  nickname: z.string().optional(),
   email: z.string().min(1, "Email is required").email("Invalid email address"),
   positionTitle: z.string().min(1, "Position title is required"),
   contactNumber: z.string()
@@ -17,6 +18,9 @@ export const createProfileSchema = z.object({
   viberNumber: z.string().optional()
     .refine(val => !val || val.replace(/\D/g, "").length === 10, "Viber number must be 10 digits")
     .refine(val => !val || val.replace(/\D/g, "").startsWith("9"), "Viber number must start with 9"),
+  bookingUrl: z.string().url("Enter a valid link (https://...)").optional().or(z.literal("")),
+  companyAddress: z.string().trim().min(1, "Company address is required"),
+  templateId: z.string().optional(),
 });
 
 export type CreateProfileValues = z.infer<typeof createProfileSchema>;

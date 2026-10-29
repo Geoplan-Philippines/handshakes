@@ -163,7 +163,7 @@ export const auth = betterAuth({
           ? {
             id: templateId,
             variables: {
-              app_name: 'Identitree',
+              app_name: 'Handshakes',
               user_name_prefix: user.name ? ` ${user.name}` : '',
               reset_url: resetLink,
               expires_in: '1 hour',
@@ -194,7 +194,7 @@ export const auth = betterAuth({
           ? {
             id: templateId,
             variables: {
-              app_name: 'Identitree',
+              app_name: 'Handshakes',
               user_name_prefix: user.name ? ` ${user.name}` : '',
               verify_url: verificationLink,
               expires_in: '1 hour',
@@ -219,6 +219,11 @@ export const auth = betterAuth({
         organization: {
           additionalFields: {
             website: {
+              type: 'string',
+              input: true,
+              required: false,
+            },
+            brochureUrl: {
               type: 'string',
               input: true,
               required: false,

@@ -19,6 +19,19 @@ export const organizationSchema = z.object({
       return url.replace(/^http:\/\//, "https://");
     })
     .pipe(z.string().url("Please enter a valid URL.").optional().or(z.literal(""))),
+  brochureUrl: z
+    .string()
+    .optional()
+    .or(z.literal(""))
+    .transform((val) => {
+      if (!val) return val;
+      let url = val.trim();
+      if (!url.startsWith("http://") && !url.startsWith("https://")) {
+        url = `https://${url}`;
+      }
+      return url.replace(/^http:\/\//, "https://");
+    })
+    .pipe(z.string().url("Please enter a valid URL.").optional().or(z.literal(""))),
 });
 
 export type OrganizationValues = z.infer<typeof organizationSchema>;

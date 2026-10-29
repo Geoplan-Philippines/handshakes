@@ -33,6 +33,38 @@ export class CloudinaryService {
     });
   }
 
+  /**
+   * Uploads a non-image file (e.g. PDF brochure) as a raw resource.
+   *
+   * Raw delivery is not subject to Cloudinary's PDF/ZIP delivery restriction,
+   * so uploaded brochures serve reliably without extra account config. The
+   * original filename is preserved so the delivered URL keeps its extension
+   * (and correct content type).
+   */
+  async uploadRaw(file: Express.Multer.File, folder: string = 'identitree/documents'): Promise<UploadApiResponse | UploadApiErrorResponse> {
+    return new Promise((resolve, reject) => {
+      const upload = cloudinary.uploader.upload_stream(
+        {
+          folder,
+          resource_type: 'raw',
+          use_filename: true,
+          unique_filename: true,
+          // Streams carry no filename, so pass the original name explicitly.
+          // This keeps the extension on the delivered URL (correct content
+          // type + a sensible download filename instead of "file").
+          filename_override: file.originalname,
+        },
+        (error, result) => {
+          if (error) return reject(error);
+          if (!result) return reject(new Error('Cloudinary upload failed: No result returned'));
+          resolve(result);
+        }
+      );
+
+      Readable.from(file.buffer).pipe(upload);
+    });
+  }
+
   async deleteImage(publicId: string): Promise<any> {
     return new Promise((resolve, reject) => {
       cloudinary.uploader.destroy(publicId, (error, result) => {

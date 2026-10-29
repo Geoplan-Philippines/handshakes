@@ -119,7 +119,7 @@ export function AnalyticsChart({ slug }: AnalyticsChartProps) {
   return (
     <div className="space-y-6">
       {/* Filters Bar */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between p-4 rounded-none border bg-card/50 backdrop-blur-sm">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between p-4 rounded-lg border bg-card/50 backdrop-blur-sm">
         <div className="flex flex-wrap items-center gap-3">
           <div className="space-y-1.5">
             <div className="flex items-center gap-2 ml-1">
@@ -131,11 +131,11 @@ export function AnalyticsChart({ slug }: AnalyticsChartProps) {
                 <Button
                   variant="outline"
                   className={cn(
-                    "w-[260px] h-9 justify-start text-left text-xs font-bold uppercase tracking-wider rounded-none border-foreground/10",
+                    "w-[260px] h-9 justify-start text-left text-xs font-bold uppercase tracking-wider rounded-lg bg-white shadow-sm border-border hover:bg-white focus-visible:ring-1 focus-visible:ring-foreground/20",
                     !filters.from && "text-muted-foreground"
                   )}
                 >
-                  <CalendarIcon className="mr-2 h-3.5 w-3.5" />
+                  <CalendarIcon className="h-3.5 w-3.5" />
                   {filters.from ? (
                     filters.to ? (
                       <>
@@ -150,7 +150,7 @@ export function AnalyticsChart({ slug }: AnalyticsChartProps) {
                   )}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0 rounded-none border-border shadow-2xl" align="start">
+              <PopoverContent className="w-auto p-0 rounded-lg border-border shadow-2xl" align="start">
                 <div className="flex divide-x divide-border">
                   <div className="flex flex-col gap-1 p-2 bg-muted/20 min-w-[140px]">
                     {[
@@ -163,7 +163,7 @@ export function AnalyticsChart({ slug }: AnalyticsChartProps) {
                         key={preset.value}
                         variant="ghost"
                         size="sm"
-                        className="justify-start text-[10px] font-black uppercase tracking-widest h-8 rounded-none px-2"
+                        className="justify-start text-[10px] font-black uppercase tracking-widest h-8 rounded-lg px-2"
                         onClick={() => handleRangeChange(preset.value)}
                       >
                         {preset.label}
@@ -189,7 +189,7 @@ export function AnalyticsChart({ slug }: AnalyticsChartProps) {
                     }}
                     numberOfMonths={2}
                     showOutsideDays={false}
-                    className="rounded-none"
+                    className="rounded-lg"
                   />
                 </div>
               </PopoverContent>
@@ -202,14 +202,14 @@ export function AnalyticsChart({ slug }: AnalyticsChartProps) {
               value={filters.channel || "ALL"}
               onValueChange={(val) => setFilters(prev => ({ ...prev, channel: val === "ALL" ? undefined : val as any }))}
             >
-              <SelectTrigger className="w-[140px] h-9 text-xs font-bold uppercase tracking-wider">
+              <SelectTrigger className="w-[140px] rounded-lg h-9 text-xs bg-white shadow-sm border-border focus-visible:ring-1 focus-visible:ring-foreground/20">
                 <SelectValue placeholder="All Channels" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ALL" className="text-xs font-bold uppercase">All Channels</SelectItem>
-                <SelectItem value="NFC_TAP" className="text-xs font-bold uppercase">NFC Taps</SelectItem>
-                <SelectItem value="QR_SCAN" className="text-xs font-bold uppercase">QR Scans</SelectItem>
-                <SelectItem value="DIRECT_LINK" className="text-xs font-bold uppercase">Direct Links</SelectItem>
+              <SelectContent position="popper" align="start" className="min-w-[170px] p-1">
+                <SelectItem value="ALL" className="text-xs">All Channels</SelectItem>
+                <SelectItem value="NFC_TAP" className="text-xs">NFC Taps</SelectItem>
+                <SelectItem value="QR_SCAN" className="text-xs">QR Scans</SelectItem>
+                <SelectItem value="DIRECT_LINK" className="text-xs">Direct Links</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -220,13 +220,13 @@ export function AnalyticsChart({ slug }: AnalyticsChartProps) {
               value={filters.profileId || "ALL"}
               onValueChange={(val) => setFilters(prev => ({ ...prev, profileId: val === "ALL" ? undefined : val }))}
             >
-              <SelectTrigger className="w-[180px] h-9 text-xs font-bold uppercase tracking-wider">
+              <SelectTrigger className="w-[180px] rounded-lg h-9 text-xs bg-white shadow-sm border-border focus-visible:ring-1 focus-visible:ring-foreground/20">
                 <SelectValue placeholder="All Profiles" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ALL" className="text-xs font-bold uppercase">All Profiles</SelectItem>
+              <SelectContent position="popper" align="start" className="min-w-[170px] p-1">
+                <SelectItem value="ALL" className="text-xs">All Profiles</SelectItem>
                 {profiles?.map((profile) => (
-                  <SelectItem key={profile.id} value={profile.id} className="text-xs font-bold uppercase">
+                  <SelectItem key={profile.id} value={profile.id} className="text-xs">
                     {profile.firstName} {profile.lastName}
                   </SelectItem>
                 ))}
@@ -240,9 +240,9 @@ export function AnalyticsChart({ slug }: AnalyticsChartProps) {
             variant="ghost"
             size="sm"
             onClick={clearFilters}
-            className="h-9 px-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground"
+            className="px-3 text-[10px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground"
           >
-            <FilterX className="mr-2 h-3.5 w-3.5" />
+            <FilterX className="h-3.5 w-3.5" />
             Clear Filters
           </Button>
         )}
@@ -251,7 +251,7 @@ export function AnalyticsChart({ slug }: AnalyticsChartProps) {
       {isLoading ? (
         <div className="grid gap-6 md:grid-cols-2">
           {/* ... skeletons ... */}
-          <Card className="rounded-none overflow-hidden">
+          <Card className="rounded-2xl overflow-hidden">
             <CardHeader>
               <Skeleton className="h-5 w-40 mb-2" />
               <Skeleton className="h-4 w-60" />
@@ -260,7 +260,7 @@ export function AnalyticsChart({ slug }: AnalyticsChartProps) {
               <Skeleton className="h-[300px] w-full" />
             </CardContent>
           </Card>
-          <Card className="rounded-none overflow-hidden">
+          <Card className="rounded-2xl overflow-hidden">
             <CardHeader>
               <Skeleton className="h-5 w-40 mb-2" />
               <Skeleton className="h-4 w-60" />
@@ -271,7 +271,7 @@ export function AnalyticsChart({ slug }: AnalyticsChartProps) {
           </Card>
         </div>
       ) : error || !data ? (
-        <div className="h-[400px] flex items-center justify-center border border-dashed rounded-none bg-muted/50">
+        <div className="h-[400px] flex items-center justify-center border border-dashed rounded-lg bg-muted/50">
           <p className="text-sm text-muted-foreground font-medium uppercase tracking-widest">Failed to load analytics data</p>
         </div>
       ) : (
@@ -280,7 +280,7 @@ export function AnalyticsChart({ slug }: AnalyticsChartProps) {
           isFetching && "opacity-60 pointer-events-none"
         )}>
           {/* Interaction Chart */}
-          <Card className="rounded-none overflow-hidden">
+          <Card className="rounded-2xl overflow-hidden">
             <CardHeader>
               <CardTitle className="text-base font-semibold">Engagement Activity</CardTitle>
               <CardDescription>Daily views and contact saves</CardDescription>
@@ -329,7 +329,7 @@ export function AnalyticsChart({ slug }: AnalyticsChartProps) {
           </Card>
 
           {/* Channel Breakdown */}
-          <Card className="rounded-none overflow-hidden">
+          <Card className="rounded-2xl overflow-hidden">
             <CardHeader>
               <CardTitle className="text-base font-semibold">Acquisition Source</CardTitle>
               <CardDescription>Breakdown by entry point</CardDescription>

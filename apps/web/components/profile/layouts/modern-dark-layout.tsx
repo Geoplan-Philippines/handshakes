@@ -1,0 +1,138 @@
+"use client";
+
+import { motion } from "motion/react";
+import { Building2, Mail, MapPin, Phone } from "lucide-react";
+import { CardProps } from "./types";
+import { getCardPattern } from "./card-patterns";
+import { cn } from "@/lib/utils";
+import { CardQrCode } from "./card-qr-code";
+
+export function ModernDarkLayout({ profile, config, isFlipped }: CardProps) {
+  const primaryColor = config?.cardPrimaryColor || config?.primaryColor || "var(--forest-ink)";
+  const secondaryColor = config?.cardSecondaryColor || "var(--forest)";
+  const textColor = config?.cardTextColor || "var(--cream)";
+  const pattern = getCardPattern(config?.cardPattern);
+  const bgImage = config?.cardBackgroundImage;
+
+  const ts = { color: textColor };
+
+  const logoAlign = config?.cardLogoAlignment || "right";
+  const nameAlign = config?.cardNameAlignment || "left";
+  const brandingText = config?.cardBrandingText?.trim();
+  const brandingPlacement = config?.cardBrandingPlacement || "back";
+  const showBrandingFront = !!brandingText && brandingPlacement === "front";
+  const showBrandingBack = !!brandingText && brandingPlacement === "back";
+
+  const getAlignClass = (align: string) => {
+    if (align === "left") return "justify-start text-left items-start";
+    if (align === "right") return "justify-end text-right items-end";
+    return "justify-center text-center items-center";
+  };
+
+  return (
+    <motion.div
+      animate={{ rotateY: isFlipped ? 180 : 0 }}
+      transition={{ duration: 0.62, ease: [0.22, 1, 0.36, 1] }}
+      className="relative aspect-[1.586/1] rounded-lg shadow-[0_30px_80px_rgba(0,0,0,0.4)]"
+      style={{ transformStyle: "preserve-3d" }}
+    >
+      {/* Front Side */}
+      <div
+        className="absolute inset-0 overflow-hidden rounded-lg border border-white/10 p-6"
+        style={{
+          backfaceVisibility: "hidden",
+          backgroundColor: primaryColor,
+          ...(bgImage ? { backgroundImage: `url(${bgImage})`, backgroundSize: "cover", backgroundPosition: "center" } : {}),
+        }}
+      >
+        {bgImage && <div className="absolute inset-0 bg-black/40" />}
+        <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/30 to-transparent" />
+        {pattern && <div className="absolute inset-0 pointer-events-none" style={pattern} />}
+
+        {/* Logo / Org */}
+        <div className={cn(
+          "absolute inset-x-6 top-5 flex items-center gap-2 text-xs font-semibold z-10 min-w-0",
+          logoAlign === "right" ? "justify-end" : logoAlign === "left" ? "justify-start" : "justify-center"
+        )} style={{ color: textColor }}>
+          {logoAlign === "left" && profile.organization?.logo && (
+            <span className="flex size-7 shrink-0 items-center justify-center">
+              <img src={profile.organization.logo} alt="" className="max-h-full max-w-full opacity-80" />
+            </span>
+          )}
+          <span className="truncate max-w-[180px] opacity-60 font-bold tracking-tight uppercase text-[9px]">{profile.organization?.name || "Handshakes"}</span>
+          {logoAlign !== "left" && profile.organization?.logo && (
+            <span className="flex size-7 shrink-0 items-center justify-center">
+              <img src={profile.organization.logo} alt="" className="max-h-full max-w-full opacity-80" />
+            </span>
+          )}
+        </div>
+
+        <div className={cn("relative flex h-full flex-col z-10 pt-8", nameAlign === "center" ? "justify-center" : "justify-between")}>
+          <div className={cn("flex flex-col", getAlignClass(nameAlign))}>
+            <p className="text-xl font-bold leading-tight tracking-tight" style={ts}>
+              {profile.firstName} {profile.lastName}
+            </p>
+            <p className="mt-1 text-[10px] font-bold uppercase tracking-widest" style={{ color: textColor, opacity: 0.4 }}>
+              {profile.positionTitle}
+            </p>
+            {showBrandingFront && (
+              <p className="mt-2 max-w-[16rem] text-[0.6rem] font-medium leading-snug line-clamp-2 whitespace-pre-line" style={{ color: textColor, opacity: 0.55 }}>
+                {brandingText}
+              </p>
+            )}
+          </div>
+
+          <div className={cn("grid gap-1.5 text-[0.65rem] font-medium", getAlignClass(config?.cardDetailsAlignment || nameAlign))} style={{ color: textColor, opacity: 0.7 }}>
+            {config?.cardShowPhone !== false && (
+              <span className="inline-flex items-center gap-2">
+                <Phone className="size-3" style={{ color: textColor, opacity: 0.9 }} />
+                {profile.contactNumber}
+              </span>
+            )}
+            {config?.cardShowEmail !== false && (
+              <span className="inline-flex items-center gap-2">
+                <Mail className="size-3" style={{ color: textColor, opacity: 0.9 }} />
+                {profile.email}
+              </span>
+            )}
+            {config?.cardShowAddress !== false && profile.companyAddress && (
+              <span className="inline-flex items-center gap-2">
+                <MapPin className="size-3 shrink-0" style={{ color: textColor, opacity: 0.9 }} />
+                {profile.companyAddress}
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Back Side */}
+      <div
+        className="absolute inset-0 overflow-hidden rounded-lg border border-white/10 p-6 text-white"
+        style={{
+          backfaceVisibility: "hidden",
+          transform: "rotateY(180deg)",
+          backgroundColor: secondaryColor,
+        }}
+      >
+        {pattern && <div className="absolute inset-0 pointer-events-none" style={pattern} />}
+        <div className="flex h-full items-center justify-between gap-5 relative z-10">
+          <div className="min-w-0">
+            <div className="mb-5 flex size-10 items-center justify-center rounded-md border border-white/10 bg-white/5">
+              <Building2 className="size-5 text-brass" aria-hidden="true" />
+            </div>
+            <p className="text-xl font-semibold leading-tight">
+              Modern ID.
+            </p>
+            <p className="mt-3 max-w-[14rem] text-xs leading-5 text-cream/50 whitespace-pre-line">
+              {showBrandingBack ? brandingText : "Tap to connect instantly with my digital profile."}
+            </p>
+          </div>
+
+          {config?.showQrCode !== false && (
+            <CardQrCode className="size-24 shrink-0 rounded-md p-2" />
+          )}
+        </div>
+      </div>
+    </motion.div>
+  );
+}

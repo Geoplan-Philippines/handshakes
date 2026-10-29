@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { apiClient } from "@/lib/api/client";
 import { toast } from "sonner";
 import { checkNfcCardExists, registerCustomerCard } from "@/lib/services/nfc-cards.service";
+import posthog from "posthog-js";
 
 const faqs = [
   {
@@ -19,11 +20,11 @@ const faqs = [
   },
   {
     q: "What kind of phone do I need?",
-    a: "You need an Android phone with NFC hardware enabled. Most modern Android devices support NFC — you can check in your phone's Settings under 'Connected devices' or 'NFC'.",
+    a: "You need an Android phone with NFC hardware enabled. Most modern Android devices support NFC. You can check in your phone's Settings under 'Connected devices' or 'NFC'.",
   },
   {
     q: "Where do I find my profile URL?",
-    a: "Visit your Identitree profile page and copy the URL from the browser address bar. It should look like: https://identitree.geoplan.ph/your-org/your-name",
+    a: "Visit your Handshakes profile page and copy the URL from the browser address bar. It should look like: https://handshakes.cards/your-org/your-name",
   },
   {
     q: "Can I activate the same card twice?",
@@ -62,6 +63,7 @@ export function ActivateClient() {
   const [isWriting, setIsWriting] = useState(false);
   const [hardwareId, setHardwareId] = useState<string | null>(null);
   const [isCheckingUrl, setIsCheckingUrl] = useState(false);
+
 
   // Pre-calculated URL to write (to ensure the fastest possible write)
   const finalUrlRef = useRef<string>("");
@@ -108,6 +110,10 @@ export function ActivateClient() {
         
         if (res.exists) {
           const urlObj = new URL(normalized);
+          // Extract slugs: /orgSlug/profileSlug
+          const paths = urlObj.pathname.split('/').filter(Boolean);
+
+
           urlObj.searchParams.set("ref", "nfc_tap");
           finalUrl = urlObj.toString();
         }
@@ -156,6 +162,12 @@ export function ActivateClient() {
           setIsWriting(false);
           setStep("success");
           toast.success(isUrlRegisteredRef.current ? "Card linked successfully!" : "Card encoded successfully!");
+          
+          posthog.capture("nfc_card_activated", {
+            hardwareId: serialNumber,
+            isUrlRegistered: isUrlRegisteredRef.current,
+            targetUrl: normalizedUrlRef.current,
+          });
         } catch (err: any) {
           console.error("NFC Write Error:", err);
           toast.error(`Write failed: ${err.message || "Unknown error"}`);
@@ -197,7 +209,7 @@ export function ActivateClient() {
         </div>
 
         {/* NFC Requirement Warning */}
-        <div className="flex items-start gap-3 border border-amber-200 bg-amber-50 dark:border-amber-900/50 dark:bg-amber-950/20 p-4 rounded-none">
+        <div className="flex items-start gap-3 border border-amber-200 bg-amber-50 dark:border-amber-900/50 dark:bg-amber-950/20 p-4 rounded-lg">
           <AlertTriangle className="size-4 text-amber-600 dark:text-amber-500 shrink-0 mt-0.5" />
           <div className="space-y-1">
             <p className="text-xs font-semibold text-amber-800 dark:text-amber-400">NFC-enabled Android phone required</p>
@@ -207,10 +219,10 @@ export function ActivateClient() {
           </div>
         </div>
 
-        <Card className="border border-border bg-background shadow-sm rounded-none overflow-hidden">
+        <Card className="border border-border bg-background shadow-sm rounded-2xl overflow-hidden">
           <CardHeader className="border-b border-border bg-muted/20 p-6">
             <div className="flex items-center gap-3">
-              <div className="bg-foreground text-background p-2 rounded-none">
+              <div className="bg-foreground text-background p-2 rounded-lg">
                 <CreditCard className="size-5" />
               </div>
               <div>
@@ -233,10 +245,10 @@ export function ActivateClient() {
                   </Label>
                   <Input
                     id="url"
-                    placeholder="https://identitree.geoplan.ph/org/slug"
+                    placeholder="https://handshakes.cards/org/slug"
                     value={targetUrl}
                     onChange={(e) => setTargetUrl(e.target.value)}
-                    className="rounded-none border-border bg-muted/10 h-12"
+                    className="rounded-lg border-border bg-muted/10 h-12"
                   />
                   <p className="text-[10px] text-muted-foreground font-medium italic">
                     Paste the URL from your profile page here.
@@ -245,11 +257,11 @@ export function ActivateClient() {
                 <Button
                   onClick={handleStartLinking}
                   disabled={!targetUrl || isCheckingUrl}
-                  className="w-full h-12 bg-foreground text-background hover:bg-foreground/90 rounded-none font-bold uppercase tracking-widest text-[10px]"
+                  className="w-full bg-foreground text-background hover:bg-foreground/90 rounded-lg font-bold uppercase tracking-widest text-[10px]"
                 >
                   {isCheckingUrl ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <Loader2 className="h-4 w-4 animate-spin" />
                       Checking URL...
                     </>
                   ) : (
@@ -260,13 +272,14 @@ export function ActivateClient() {
             )}
 
             {step === "scanning" && (
-              <div className="flex flex-col items-center justify-center py-6 space-y-6 animate-in zoom-in-95 duration-300">
+              <div className="flex flex-col items-center justify-center py-2 space-y-6 animate-in zoom-in-95 duration-300">
                 <div className="relative">
                   <div className="absolute inset-0 bg-foreground/5 animate-ping rounded-full" />
-                  <div className="relative bg-muted border border-border p-8 rounded-none">
+                  <div className="relative bg-muted border border-border p-8 rounded-lg">
                     <Smartphone className={cn("size-10 transition-transform", isScanning && "animate-bounce")} />
                   </div>
                 </div>
+
                 <div className="text-center space-y-2">
                   <h3 className="text-lg font-bold text-foreground tracking-tight">
                     {isWriting ? "Writing to Card" : "Ready to Tap"}
@@ -285,18 +298,21 @@ export function ActivateClient() {
             )}
 
             {step === "success" && (
-              <div className="flex flex-col items-center justify-center py-4 space-y-6 animate-in fade-in zoom-in-95 duration-500">
-                <div className="bg-foreground text-background p-5 rounded-none border border-foreground">
+              <div className="flex flex-col items-center justify-center py-2 space-y-6 animate-in fade-in zoom-in-95 duration-500">
+                <div className="bg-foreground text-background p-5 rounded-lg border border-foreground">
                   <CheckCircle2 className="size-10" />
                 </div>
+
                 <div className="text-center space-y-2">
-                  <h3 className="text-xl font-bold text-foreground tracking-tight">Activated Successfully</h3>
+                  <h3 className="text-xl font-bold text-foreground tracking-tight">
+                    Activated Successfully
+                  </h3>
                   <p className="text-xs text-muted-foreground leading-relaxed">
                     Your physical card is now linked and fully encoded.
                   </p>
                   {hardwareId && (
                     <div className="mt-4 p-3 bg-muted border border-border text-left">
-                      <p className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground mb-1">ID</p>
+                      <p className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground mb-1">Hardware ID</p>
                       <code className="text-[10px] font-mono text-foreground break-all">{hardwareId}</code>
                     </div>
                   )}
@@ -305,7 +321,7 @@ export function ActivateClient() {
                    <Button
                     variant="outline"
                     onClick={handleReset}
-                    className="w-full h-11 rounded-none border-border font-bold uppercase tracking-widest text-[10px] hover:bg-muted"
+                    className="w-full rounded-lg border-border font-bold uppercase tracking-widest text-[10px] hover:bg-muted"
                   >
                     Activate Another Card
                   </Button>
@@ -320,7 +336,7 @@ export function ActivateClient() {
           <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-1">
             Frequently Asked Questions
           </p>
-          <Card className="border border-border bg-background rounded-none shadow-sm">
+          <Card className="border border-border bg-background rounded-2xl shadow-sm">
             <CardContent className="px-6 py-0 divide-y divide-border">
               {faqs.map((faq) => (
                 <FaqItem key={faq.q} q={faq.q} a={faq.a} />
@@ -330,7 +346,7 @@ export function ActivateClient() {
         </div>
 
         <p className="text-[9px] font-bold uppercase tracking-[0.3em] text-muted-foreground/40 text-center leading-loose">
-          Secure Registration • Identitree NFC
+          Secure Registration • Handshakes NFC
         </p>
       </div>
     </main>

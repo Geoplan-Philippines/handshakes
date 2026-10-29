@@ -9,6 +9,10 @@ export class CreateProfileDTO {
   @IsString()
   lastName!: string;
 
+  @IsOptional()
+  @IsString()
+  nickname?: string;
+
   @IsNotEmpty()
   @IsEmail()
   email!: string;
@@ -36,4 +40,20 @@ export class CreateProfileDTO {
   @IsOptional()
   @IsString()
   viberNumber?: string;
+
+  @IsOptional()
+  @IsString()
+  bookingUrl?: string;
+
+  @IsNotEmpty()
+  @IsString()
+  companyAddress!: string;
+
+  @IsOptional()
+  @IsString()
+  templateId?: string;
+
+  @IsOptional()
+  @IsString()
+  templateKey?: string;
 }

@@ -14,6 +14,10 @@ export const authClient = createAuthClient({
               type: "string",
               required: false,
             },
+            brochureUrl: {
+              type: "string",
+              required: false,
+            },
           },
         },
       }),
